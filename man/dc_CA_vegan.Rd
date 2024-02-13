@@ -40,7 +40,7 @@ is taken for the new analysis.}
 \item{verbose}{logical for printing a simple summary (default: FALSE)}
 }
 \value{
-A list:
+A list of \code{class} \code{dccaV}; that is a list with elements
 \describe{
 \item{CCAonTraits}{a \code{\link[vegan]{cca.object}} from the \code{\link[vegan]{cca}} analysis
 of the transpose of the closed \code{response} using formula \code{formulaTraits}. }
@@ -65,16 +65,19 @@ This is the maximum that the row predictors could explain in dc-CA
 }
  }
 }
-If \code{verbose} is \code{TRUE}, then there are four more items (in this version).
+if \code{verbose} is \code{TRUE} there are three more items (in this version).
 \itemize{
-\item \code{c_traits_normed}: (regression) coefficients of the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.
-\item \code{c_env_normed}: (regression) coefficients of the environmental variables that define the dc-CA axes
+\item \code{c_traits_normed}: mean, sd, VIF and (regression) coefficients of
+ the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.
+\item \code{c_env_normed}:  mean, sd, VIF and (regression) coefficients of the environmental variables that define the dc-CA axes
  in terms of the environmental variables (composite gradients), and their optimistic t-ratio.
-\item \code{cor_traits_SNC}: a list with three items
+\item \code{species_axes}: a list with three items
  \itemize{
- \item \code{SNC}: a matrix with species niche centroids along the dc-CA axes (composite gradients).
+ \item \code{species_scores}: a list with names \code{c("species_scores_unconstrained", "lc_traits_scores")} with the
+ matrix with species niche centroids along the dc-CA axes (composite gradients) and
+ the matrix with linear combinations of traits.
  \item \code{correlation}: a matrix with inter-set correlations of the traits with their SNCs.
- \item \code{beta_tval}: a matrix with regression coefficients for traits and their optimistic t-ratios.
+ \item \code{b_se}: a matrix with (unstandardized) regression coefficients for traits and their optimistic standard errors.
  \item \code{R2_traits}: a vector with coefficient of determination (R2) of the SNCs on to the traits.
  The square-root thereof could be called the species-trait correlation in analogy with
  the species-environment correlation in CCA.
@@ -138,8 +141,10 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-site_scores <- dcCA:::scores_dcCA(out) # not yet exported
-str(site_scores)
+mod_scores <- scores(out, display = "all") # not yet exported
+names(mod_scores)
+#[1] "sites"      "lc"         "species"    "lc_traits"  "cor"
+#[6] "reg_traits" "cor_traits"
 
 # community-level permutation test
 anova(out$RDAonEnv) # all option of anova.cca are available!
@@ -183,4 +188,7 @@ http://rdcu.be/ETPh
 ter Braak C.J.F. and  P. Šmilauer  (2018). Canoco reference manual
 and user's guide: software for ordination (version 5.1x).
 Microcomputer Power, Ithaca, USA, 536 pp.
+}
+\seealso{
+\code{\link{scores.dccav}} and \code{\link{print.dccav}}
 }

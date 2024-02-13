@@ -62,7 +62,7 @@
 #'   immaterial for the interpretation of the results.
 #'
 #' @returns
-#' A list:
+#' A list of \code{class} \code{dccaV}; that is a list with elements
 #' \describe{
 #' \item{CCAonTraits}{a \code{\link[vegan]{cca.object}} from the \code{\link[vegan]{cca}} analysis
 #' of the transpose of the closed \code{response} using formula \code{formulaTraits}. }
@@ -87,16 +87,19 @@
 #' }
 #'  }
 #' }
-#' If \code{verbose} is \code{TRUE}, then there are four more items (in this version).
+#' if \code{verbose} is \code{TRUE} there are three more items (in this version).
 #' \itemize{
-#' \item \code{c_traits_normed}: (regression) coefficients of the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.
-#' \item \code{c_env_normed}: (regression) coefficients of the environmental variables that define the dc-CA axes
+#' \item \code{c_traits_normed}: mean, sd, VIF and (regression) coefficients of
+#'  the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.
+#' \item \code{c_env_normed}:  mean, sd, VIF and (regression) coefficients of the environmental variables that define the dc-CA axes
 #'  in terms of the environmental variables (composite gradients), and their optimistic t-ratio.
-#' \item \code{cor_traits_SNC}: a list with three items
+#' \item \code{species_axes}: a list with three items
 #'  \itemize{
-#'  \item \code{SNC}: a matrix with species niche centroids along the dc-CA axes (composite gradients).
+#'  \item \code{species_scores}: a list with names \code{c("species_scores_unconstrained", "lc_traits_scores")} with the
+#'  matrix with species niche centroids along the dc-CA axes (composite gradients) and
+#'  the matrix with linear combinations of traits.
 #'  \item \code{correlation}: a matrix with inter-set correlations of the traits with their SNCs.
-#'  \item \code{beta_tval}: a matrix with regression coefficients for traits and their optimistic t-ratios.
+#'  \item \code{b_se}: a matrix with (unstandardized) regression coefficients for traits and their optimistic standard errors.
 #'  \item \code{R2_traits}: a vector with coefficient of determination (R2) of the SNCs on to the traits.
 #'  The square-root thereof could be called the species-trait correlation in analogy with
 #'  the species-environment correlation in CCA.
@@ -114,7 +117,7 @@
 #' ter Braak C.J.F. and  P. Šmilauer  (2018). Canoco reference manual
 #' and user's guide: software for ordination (version 5.1x).
 #' Microcomputer Power, Ithaca, USA, 536 pp.
-#'
+#' @seealso \code{\link{scores.dccav}} and \code{\link{print.dccav}}
 #' @example demo/dune_dcCA.R
 #' @export
 
@@ -190,42 +193,13 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
   attr(inertia, which = "meaning") <-  matrix( expla[rownames(inertia)], ncol=1,
                                                 dimnames = list(rownames(inertia),"meaning"))
 
-  out2 <- list(RDAonEnv = step2,
-               formulaEnv = formulaEnv,
-               eigenvalues =  step2$CCA$eig,
-               inertia = inertia)
-  out <- c(out1, out2)
 
-
-  if (verbose) {
-    c_env_normed <- as.matrix(vegan::scores(step2, display = "reg", scaling = "species", choices = 1:step2$CCA$rank))
-    c_env_normed <-   c_env_normed %*% diag(sqrt(step2$CCA$eig)) # in sites scaling
-    colnames(c_env_normed) <- paste("Regr", seq_len(ncol(c_env_normed)), sep = "")
-    avgX <- attr(step2$CCA$QR$qr, which= "scaled:center")
-    sdsX = sqrt(colMeans(qr.X(step2$CCA$QR)^2))
-    ## t-values of regression coefficients based on type = "canoco" residuals
-    tval <- coef(step2)/sqrt(diag(vcov(step2, type = "canoco")))
-    colnames(tval) <- paste("tval_regr", seq_len(ncol(tval)), sep = "")
-
-    c_env_normed <- cbind(Avg = avgX, SDS = sdsX, c_env_normed[names(sdsX),],tval[names(sdsX),])
-
-    cor_traits_SNC <- f_trait_axes(out)
-    c_traits_normed <- cor_traits_SNC$c_traits_normed
-    choices <- c(1, 2,3)
-    print(step1)
-    print(step2)
-    print (round(c_env_normed[,c(choices, 3 + ncol(tval) ) ],4))
-    print (round(c_traits_normed[,c(choices, 3 + ncol(tval) )],4))
-    cat("\n")
-    print (round(inertia,3))
-    out <- c(out, list( c_traits_normed = c_traits_normed, c_env_normed = c_env_normed,
-                 cor_traits_SNC = cor_traits_SNC))
-  }
-
-
-
-
-
+  out <- c(out1, list(RDAonEnv = step2,
+                      formulaEnv = formulaEnv,
+                      eigenvalues =  step2$CCA$eig,
+                      inertia = inertia))
+  class(out) <- c("dccav", "list")
+  if (verbose) out<-print.dccav(out)
   return(out)
 }
 

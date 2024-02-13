@@ -1,11 +1,12 @@
 Package: dcCA
 Type: Package
-Title: Double Constrained Correspondence Analysis (dc-CA) For Trait-Environment Analysis in Ecology
-Version: 0.1.0
+Title: Double Constrained Correspondence Analysis (dc-CA) For
+        Trait-Environment Analysis in Ecology
+Version: 0.1.1
 Authors@R: person(given ="Cajo J.F", family = "ter Braak", email="cajo.terbraak@wur.nl", 
    role=c("aut","cre"), comment=c(ORCID="0000-0002-0414-8745"))
 Maintainer: Cajo J.F. ter Braak <cajo.terbraak@wur.nl>
-Description:  dcCA analyzes multi-trait multi-environment ecological data by
+Description: dcCA analyzes multi-trait multi-environment ecological data by
    double constrained correspondence analysis (ter Braak et al. 2018) using \code{vegan}, \code{ade4} and native R code.
    Throughout the two step algorithm of ter Braak et al. (2018) is used. This algorithm
    combines and extends community- (sample-) and species-level analyses, i.e.
@@ -31,4 +32,5 @@ LazyData: true
 Imports: vegan, ade4, ggplot2, gridExtra
 RoxygenNote: 7.3.0
 NeedsCompilation: no
-Packaged: 2024-01-17 15:15:02 UTC; braak008
+Packaged: 2024-02-13 15:54:14 UTC; braak008
+Author: Cajo J.F ter Braak [aut, cre] (<https://orcid.org/0000-0002-0414-8745>)

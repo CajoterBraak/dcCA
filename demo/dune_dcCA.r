@@ -10,8 +10,10 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-site_scores <- dcCA:::scores_dcCA(out) # not yet exported
-str(site_scores)
+mod_scores <- scores(out, display = "all") # not yet exported
+names(mod_scores)
+#[1] "sites"      "lc"         "species"    "lc_traits"  "cor"
+#[6] "reg_traits" "cor_traits"
 
 # community-level permutation test
 anova(out$RDAonEnv) # all option of anova.cca are available!

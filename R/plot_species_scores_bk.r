@@ -27,6 +27,7 @@
 #' The function has been copied from the \code{PRC} package at https://github.com/CajoterBraak/PRC.
 #'
 #' @return  a ggplot object
+#' @example demo/dune_plot_dcCA.R
 #' @export
 
 plot_species_scores_bk <- function(species_scores, ylab = latex2exp::TeX("$b_k$"), threshold=7, y_lab_interval=0.5,

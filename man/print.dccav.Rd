@@ -12,3 +12,7 @@
 \description{
 Print a summary of a dc-CA object
 }
+\details{
+\code{x <- print(x)} is more efficient for \code{\link{scores.dccav}} than just \code{print(x)}
+if \code{\link{dc_CA_vegan}} is called without argument \code{verbose} (or called with \code{verbose = FALSE}).
+}

@@ -1,6 +1,6 @@
 
 data("dune_trait_env")
-
+# rownames are carried forward in results
 rownames(dune_trait_env$comm) <- dune_trait_env$comm$Sites
 out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    formulaTraits = ~. ,
@@ -10,15 +10,18 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-mod_scores <- scores(out, display = "all") # not yet exported
-names(mod_scores)
-#[1] "sites"      "lc"         "species"    "lc_traits"  "cor"
-#[6] "reg_traits" "cor_traits"
+
 
 # community-level permutation test
 anova(out$RDAonEnv) # all option of anova.cca are available!
 # a species-level permuation test requires an dedicated new function
 # this is not yet available in this version
+
+mod_scores <- scores(out, display = "all")
+names(mod_scores)
+# mod_scores <- scores(out, display = "all", tidy = TRUE)
+# names(mod_scores)
+# levels(mod_scores$score)
 
 # for illustration: a dc-CA model with a trait covariate
 out2 <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,

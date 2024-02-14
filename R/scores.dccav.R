@@ -3,34 +3,41 @@
 #' @description
 #' This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
 #' in particuluar \code{\link[vegan]{scores.cca}}, with the additional results such
-#' as regression coefficients and linear combinations of traits ('regr_traits','lc_traits').
-#' In the current version, there is a single scaling (scaling = "sites").
-#' All scores from CCA obey the so called transition formulas and so do the scores of dc-CA.
-#' The difference is that the linear combinations of traits (the \emph{constrained} species scores)
-#' replace the usual (\emph{unconstrained}) species scores.
+#' as regression coefficients and linear combinations of traits \code{('regr_traits','lc_traits')}
+#' In the current version, there is a single scaling (\code{scaling = "sites"}).
+#' All scores from CA obey the so called transition formulas and so do the scores of CCA and dc-CA.
+#' The differences are, for CCA, that the linear combinations of environmental variables
+#' (the \emph{constrained} site scores)
+#' replace the usual (\emph{unconstrained}) site scores, and for dc-CA,
+#' that the linear combinations of traits (the \emph{constrained} species scores)
+#' also replace the usual (\emph{unconstrained}) species scores.
 #'
 #' @param x object
 #' @param choices integer vector of which axes to obtain. Default: all dc-CA axes.
 #' @param display a character vector, one or more of
-#' \code{c("all","species","sites","sp", "wa", "lc", "cor",
-#' "reg", "cn","lc_traits", "reg_traits", "cor_traits")}.
-#' The first nine are as in \code{\link[vegan]{scores.cca}} and remaining ones are similar scores for traits.
+#' \code{c("all","species","sites","sp", "wa", "lc","bp", "cor", "reg", "cn",
+#' "lc_traits", "reg_traits", "cor_traits")}.
+#' The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
+#' and remaining ones are similar scores for traits.
 #' @param which_cor character or list of trait and environmental variables names in the data frames
 #' for which inter-set correlations must calculated.
 #' Default: a character ("in_model") for all traits and variables in the model,
 #' including collinear variables and levels.
 #'
+#' @details
+#' In current version: no biplot scores for traits
+#' In current version: no centroid scores for traits
+#'
 #' @example demo/dune_dcCA.R
 #' @export
-scores.dccav <- function(x, choices, display= c("all"), which_cor = "in model", tidy = FALSE,...){
+scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in model", tidy = FALSE,...){
  scaling = "sites" # currently only a single scaling is available
  if (!class(x)[1]=="dccav") stop("The first argument must be the result of the function dc_CA_vegan.")
 
- tabula <- c("species", "sites", "constraints", "correlation",
-             "regression", "centroids", "constraints_traits", "regression_traits", "correlation_traits" )
- names(tabula) <- c("sp", "wa", "lc", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits")
-  display <- match.arg(display, c("sites", "species", "wa",
-                                 "lc", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits", "all"),
+ tabula <- c("species", "sites", "constraints", "biplot", "correlation",
+             "regression", "centroids", "constraints_species", "regression_traits", "correlation_traits" )
+ names(tabula) <- c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits")
+  display <- match.arg(display, c(names(tabula), "all"),
                       several.ok = TRUE)
  ## set "all" for tidy scores
  if (tidy)
@@ -46,53 +53,119 @@ scores.dccav <- function(x, choices, display= c("all"), which_cor = "in model", 
  take <- tabula[display]
 
   if ((!"species_axes"%in%names(x)) && any(c("species",
-           "constraints_traits", "regression_traits", "correlation_traits")%in% take)){
-    c_env_normed <- regr_env(out)
-    species_axes <- f_trait_axes(out)
+           "constraints_species", "regression_traits", "correlation_traits")%in% take)){
+    c_env_normed <- regr_env(x)
+    species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){c_env_normed <- x$c_env_normed; species_axes<- x$species_axes}
 
   if (scaling == "sites")  myconst <- sqrt(vegan:::nobs.cca(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
     if (scaling == "species") myconst <- sqrt(vegan:::nobs.cca(x$RDAonEnv))
 
+   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
    sol <- list()
 
-    if ("sites" %in% take)
+    if ("sites" %in% take){
     sol$sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("sites"), scaling = scaling,
-                                       choices = seq_len(x$RDAonEnv$CCA$rank), const = myconst)
-    if ( "constraints" %in%take)
-    sol$lc  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
-                                    choices = seq_len(x$RDAonEnv$CCA$rank), const = myconst)
+                                       choices = choices, const = myconst)
+    }
+    if ( "constraints" %in%take){
+    sol$constraints_sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
+                                    choices = choices, const = myconst)
+    }
+   if ( "biplot" %in%take){
+     sol$biplot  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
+                                   choices = choices, const = myconst)
+   }
+
+   if ( "centroids" %in%take){
+     sol$centroids  <- vegan:::scores.rda(x$RDAonEnv, display = c("cn"), scaling = scaling,
+                                       choices = choices, const = myconst)
+   }
 
 
-
-    if ( "species" %in%take) sol$species <- species_axes$species[[1]]
-    if ( "constraints_traits" %in%take)sol$lc_traits <- species_axes$species[[2]]
-
-    if ("regression"%in% take) sol$reg <- c_env_normed
+    if ("regression"%in% take) sol$regression <- c_env_normed[,regchoices]
     if ("correlation"%in% take) {
       sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("sites"), scaling = scaling,
-                                   choices = seq_len(x$RDAonEnv$CCA$rank))
+                                   choices = choices)
       # correlations of the dataEnv wrt the first axis (site scores)
       if (!is.list(which_cor )) in_model <- colnames(x$data$dataEnv)%in% colnames(attr(terms(x$RDAonEnv), which = "factors")) else
         in_model = which_cor[[2]]
       env0 <-  model.matrix(~.-1, constrasts = FALSE, data = x$data$dataEnv[, in_model, drop = FALSE])
       Cormat <- cov2cor(cov(cbind( env0, sites)))
-      Cor_Env_CWM <- Cormat[seq_len(ncol(env0)),ncol(env0) + seq_len(x$RDAonEnv$CCA$rank) , drop = FALSE]
+      Cor_Env_CWM <- Cormat[seq_len(ncol(env0)),ncol(env0) + seq_len(ncol(sites)) , drop = FALSE]
       colnames(Cor_Env_CWM) <- paste("CWM-ax", seq_len(ncol(Cor_Env_CWM)), sep= "")
       attr(Cor_Env_CWM, which = "meaning")<-
 "inter set correlation, correlation between environmental variables and the sites scores (CWMs)"
-      sol$cor <- Cor_Env_CWM
+      sol$correlation <- Cor_Env_CWM
     }
 
-    if ("regression_traits"%in% take)sol$reg_traits <- species_axes$c_traits_normed
+# Species stats -----------------------------------------------------------
+   if ( "species" %in%take) {
+     sol$species <- species_axes$species[[1]][,choices, drop = FALSE]
+   }
+   if ( "constraints_species" %in%take){
+     sol$constraints_species <- species_axes$species[[2]][,choices, drop = FALSE]
+   }
+    if ("regression_traits"%in% take)sol$regression_traits <- species_axes$c_traits_normed[,regchoices]
     if ("correlation_traits"%in% take) {
-      if (!is.list(which_cor)){ sol$cor_traits <- species_axes$correlation} else{
+      if (!is.list(which_cor)){
+        sol$correlation_traits <- species_axes$correlation[,choices, drop = FALSE]
+      } else{
         whichc = which_cor[[1]]
-        cor_traits_SNC <- f_trait_axes(out, which_cor = whichc)
-        sol$cor_traits <- cor_traits_SNC$correlation
+        cor_traits_SNC <- dcCA:::f_trait_axes(x, which_cor = whichc)
+        sol$correlation_traits <- cor_traits_SNC$correlation[,choices, drop = FALSE]
       }
     }
 
+   for (nam in names(sol)){
+     if (!nam %in% c("regression", "regression_traits", "correlation", "correlation_traits"))
+     colnames(sol[[nam]]) <-  paste("dcCA", choices, sep = "") else if (nam %in% c("regression", "regression_traits"))
+       colnames(sol[[nam]])[-c(1,2,3)] <-  paste("dcCA", choices, sep = "")
+   }
+
+# taken from vegan::scores.cca with thanks --------------------------------
+   ## Take care that scores have names
+   if (length(sol)) {
+     for (i in seq_along(sol)) {
+       if (is.matrix(sol[[i]]))
+         rownames(sol[[i]]) <-
+           rownames(sol[[i]], do.NULL = FALSE,
+                    prefix = substr(names(sol)[i], 1, 3))
+     }
+   }
+   ## tidy scores
+   if (tidy) {
+     if (length(sol) == 0) # no requested scores existed
+       return(NULL)
+     ## re-group biplot arrays duplicating factor centroids
+     if (!is.null(sol$biplot) && !is.null(sol$centroids)) {
+       dup <- rownames(sol$biplot) %in% rownames(sol$centroids)
+       if (any(dup)) {
+         sol$factorbiplot <- sol$biplot[dup,, drop=FALSE]
+         sol$biplot <- sol$biplot[!dup,, drop=FALSE]
+       }
+     }
+     group <- sapply(sol, nrow)
+     group <- rep(names(group), group)
+     sol <- do.call(rbind, sol)
+     label <- rownames(sol)
+     cw <- weights(x$CCAonTraits, "sites") # weights(x) can fail with na.action=na.exclude
+     rw <- weights(x$RDAonEnv, "sites")
+     w <- rep(NA, nrow(sol))
+     if (any(weighted <- group == "sites"))
+       w[weighted] <- rw
+     if (any(weighted <- group == "constraints"))
+       w[weighted] <- rw
+     if (any(weighted <- group == "species"))
+       w[weighted] <- cw
+     if (any(weighted <- group == "constraints_species"))
+       w[weighted] <- cw
+     sol <- as.data.frame(sol)
+     sol$score <- as.factor(group)
+     sol$label <- label
+     sol$weight <- w
+     names(sol)[seq_along(choices)] <- paste("dcCA", choices, sep = "")
+   }
 
 
     ## return NULL instead of list(), and matrix instead of a list of

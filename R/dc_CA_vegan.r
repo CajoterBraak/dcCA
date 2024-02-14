@@ -14,7 +14,6 @@
 #' rows by the sample total, which is 1 after closure).
 #' The current vegan-based analysis is efficient for sample-based permutation tests but slow or
 #' -not yet available- for species-based permutation tests.
-#' The technical reason for the closure is that \code{vegan} \code{\link[vegan]{rda}} cannot do a weighted analysis.
 #'
 #' @param formulaEnv formula or one-sided formula for the rows (samples) with row predictors in \code{dataEnv}.
 #' When two-sided, the left hand side of the formula is not used. Specify row covariates (if any ) by adding \code{+ Condition(covariate-formula)}
@@ -55,14 +54,12 @@
 #' \code{vegan} \code{\link[vegan]{rda}} cannot do a weighted analysis, whereas \code{\link[vegan]{cca}} uses
 #' the weights implied by the \code{response} after closure.
 #'
-#' The scale-free statistics in the example \code{dune_dcCA.r},
-#'  have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918).
-#'  But, the sites and species scores and, hence, the regression coefficients, differ
-#'  due to a difference in scaling of scores. But, note that the scaling is
-#'   immaterial for the interpretation of the results.
+#' The statistics and scores in the example \code{dune_dcCA.r},
+#'  have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918)
+#'  for the scaling with \emph{Focus on Case distances} (\code{scaling = "sites"}).
 #'
 #' @returns
-#' A list of \code{class} \code{dccaV}; that is a list with elements
+#' A list of \code{class} \code{dccav}; that is a list with elements
 #' \describe{
 #' \item{CCAonTraits}{a \code{\link[vegan]{cca.object}} from the \code{\link[vegan]{cca}} analysis
 #' of the transpose of the closed \code{response} using formula \code{formulaTraits}. }

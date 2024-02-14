@@ -58,22 +58,22 @@ The function has been copied from the \code{PRC} package at https://github.com/C
 }
 \examples{
 data("dune_trait_env")
-
+# rownames are carried forward in results
 rownames(dune_trait_env$comm) <- dune_trait_env$comm$Sites
-out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
-                   formulaTraits = ~. ,
-                   response = dune_trait_env$comm[, -1],  # must delete "Sites"
-                   dataEnv =dune_trait_env$envir,
-                   # delete "Species", "Species_abbr" from traits and
-                   # use all remaining variables due to formulaTraits = ~. (the default)
-                   dataTraits =dune_trait_env$traits[,-c(1,2)],
-                   verbose = FALSE)
-out<-print(out)
-mod_scores <- scores(out, display = "all") # not yet exported
-names(mod_scores)
-#[1] "sites"      "lc"         "species"    "lc_traits"  "cor"
-#[6] "reg_traits" "cor_traits"
+# must delete "Sites" from response matrix or data frame
+Y <- dune_trait_env$comm[,-1] # must delete "Sites"
 
+out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
+                   formulaTraits = ~ SLA + Height + LDMC + Seedmass + Lifespan ,
+                   response = Y,
+                   dataEnv =dune_trait_env$envir,
+                   dataTraits =dune_trait_env$traits
+                   )
+out <- print(out) # more efficient for  scores() than just 'print(out)'
+
+mod_scores <- scores(out, display = "all")
+names(mod_scores)
+#str(mod_scores)
 axis <- 1
 stats <- c(community= "cor", species = "cor") # "weights
 if (length(stats)==1)stats <- c(stats,stats)
@@ -82,11 +82,11 @@ if (length(stats)==1)stats <- c(stats,stats)
 # community level plot ----------------------------------------------------
 
 if (stats[1] == "weights"){
-  trait_scores <- mod_scores$reg_traits
+  trait_scores <- mod_scores$regression_traits
   ylab_traits <-  "Weight in composite trait"
   offset  <- 3
 } else {
-  trait_scores <- mod_scores$cor_traits
+  trait_scores <- mod_scores$correlation_traits
   ylab_traits <- "cor(trait, SNC)"
   offset <- 0
 }
@@ -95,7 +95,7 @@ if (stats[1] == "weights"){
 #if (length(smoothing_method)==1)smoothing_method <- c(smoothing_method,smoothing_method)
 
 dat <- out$data$dataEnv
-dat$composite_env <- mod_scores$lc[,axis]
+dat$composite_env <- mod_scores$constraints_sites[,axis]
 dat$CWM_composite_trait <- mod_scores$sites[,axis]
 
 site_groups<- PRC::get_focal_and_conditioning_factors(out$RDAonEnv)$condition # site groups
@@ -124,18 +124,18 @@ plot_traits <- plot_species_scores_bk(
 # species-level plot ------------------------------------------------------
 
 if (stats[2]=="weights"){
-  env_scores <- mod_scores$reg
+  env_scores <- mod_scores$regression
   ylab_env <-  "Weight in gradient"
   offset <- 3
 } else {
-  env_scores <- mod_scores$cor
+  env_scores <- mod_scores$correlation
   ylab_env <- "cor(env, CWM)"
   offset <- 0
 }
 
 
 dat <- out$data$dataTraits
-dat$composite_trait <- mod_scores$lc_traits[,axis]
+dat$composite_trait <- mod_scores$constraints_species[,axis]
 dat$SNC_composite_env <- mod_scores$species[,axis]
 dat$`rel.abundance` <- out$CCAonTraits$rowsum
 

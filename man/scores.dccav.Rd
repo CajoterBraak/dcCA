@@ -6,7 +6,7 @@
 \usage{
 \method{scores}{dccav}(
   x,
-  choices,
+  choices = c(1, 2),
   display = c("all"),
   which_cor = "in model",
   tidy = FALSE,
@@ -19,9 +19,10 @@
 \item{choices}{integer vector of which axes to obtain. Default: all dc-CA axes.}
 
 \item{display}{a character vector, one or more of
-\code{c("all","species","sites","sp", "wa", "lc", "cor",
-"reg", "cn","lc_traits", "reg_traits", "cor_traits")}.
-The first nine are as in \code{\link[vegan]{scores.cca}} and remaining ones are similar scores for traits.}
+\code{c("all","species","sites","sp", "wa", "lc","bp", "cor", "reg", "cn",
+"lc_traits", "reg_traits", "cor_traits")}.
+The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
+and remaining ones are similar scores for traits.}
 
 \item{which_cor}{character or list of trait and environmental variables names in the data frames
 for which inter-set correlations must calculated.
@@ -31,16 +32,23 @@ including collinear variables and levels.}
 \description{
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
 in particuluar \code{\link[vegan]{scores.cca}}, with the additional results such
-as regression coefficients and linear combinations of traits ('regr_traits','lc_traits').
-In the current version, there is a single scaling (scaling = "sites").
-All scores from CCA obey the so called transition formulas and so do the scores of dc-CA.
-The difference is that the linear combinations of traits (the \emph{constrained} species scores)
-replace the usual (\emph{unconstrained}) species scores.
+as regression coefficients and linear combinations of traits \code{('regr_traits','lc_traits')}
+In the current version, there is a single scaling (\code{scaling = "sites"}).
+All scores from CA obey the so called transition formulas and so do the scores of CCA and dc-CA.
+The differences are, for CCA, that the linear combinations of environmental variables
+(the \emph{constrained} site scores)
+replace the usual (\emph{unconstrained}) site scores, and for dc-CA,
+that the linear combinations of traits (the \emph{constrained} species scores)
+also replace the usual (\emph{unconstrained}) species scores.
+}
+\details{
+In current version: no biplot scores for traits
+In current version: no centroid scores for traits
 }
 \examples{
 
 data("dune_trait_env")
-
+# rownames are carried forward in results
 rownames(dune_trait_env$comm) <- dune_trait_env$comm$Sites
 out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    formulaTraits = ~. ,
@@ -50,15 +58,18 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-mod_scores <- scores(out, display = "all") # not yet exported
-names(mod_scores)
-#[1] "sites"      "lc"         "species"    "lc_traits"  "cor"
-#[6] "reg_traits" "cor_traits"
+
 
 # community-level permutation test
 anova(out$RDAonEnv) # all option of anova.cca are available!
 # a species-level permuation test requires an dedicated new function
 # this is not yet available in this version
+
+mod_scores <- scores(out, display = "all")
+names(mod_scores)
+# mod_scores <- scores(out, display = "all", tidy = TRUE)
+# names(mod_scores)
+# levels(mod_scores$score)
 
 # for illustration: a dc-CA model with a trait covariate
 out2 <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,

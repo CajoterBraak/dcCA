@@ -40,7 +40,7 @@ is taken for the new analysis.}
 \item{verbose}{logical for printing a simple summary (default: FALSE)}
 }
 \value{
-A list of \code{class} \code{dccaV}; that is a list with elements
+A list of \code{class} \code{dccav}; that is a list with elements
 \describe{
 \item{CCAonTraits}{a \code{\link[vegan]{cca.object}} from the \code{\link[vegan]{cca}} analysis
 of the transpose of the closed \code{response} using formula \code{formulaTraits}. }
@@ -99,7 +99,6 @@ community-level analyses, instead of corresponding to a weighted analysis (dc-CA
 rows by the sample total, which is 1 after closure).
 The current vegan-based analysis is efficient for sample-based permutation tests but slow or
 -not yet available- for species-based permutation tests.
-The technical reason for the closure is that \code{vegan} \code{\link[vegan]{rda}} cannot do a weighted analysis.
 }
 \details{
 Empty (all zero) rows and columns in \code{response} are removed from the \code{response} and the corresponding
@@ -122,16 +121,14 @@ two-fold: dc-CA is the efficient summary of CWM-based regression analyses, which
 \code{vegan} \code{\link[vegan]{rda}} cannot do a weighted analysis, whereas \code{\link[vegan]{cca}} uses
 the weights implied by the \code{response} after closure.
 
-The scale-free statistics in the example \code{dune_dcCA.r},
- have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918).
- But, the sites and species scores and, hence, the regression coefficients, differ
- due to a difference in scaling of scores. But, note that the scaling is
-  immaterial for the interpretation of the results.
+The statistics and scores in the example \code{dune_dcCA.r},
+ have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918)
+ for the scaling with \emph{Focus on Case distances} (\code{scaling = "sites"}).
 }
 \examples{
 
 data("dune_trait_env")
-
+# rownames are carried forward in results
 rownames(dune_trait_env$comm) <- dune_trait_env$comm$Sites
 out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    formulaTraits = ~. ,
@@ -141,15 +138,18 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-mod_scores <- scores(out, display = "all") # not yet exported
-names(mod_scores)
-#[1] "sites"      "lc"         "species"    "lc_traits"  "cor"
-#[6] "reg_traits" "cor_traits"
+
 
 # community-level permutation test
 anova(out$RDAonEnv) # all option of anova.cca are available!
 # a species-level permuation test requires an dedicated new function
 # this is not yet available in this version
+
+mod_scores <- scores(out, display = "all")
+names(mod_scores)
+# mod_scores <- scores(out, display = "all", tidy = TRUE)
+# names(mod_scores)
+# levels(mod_scores$score)
 
 # for illustration: a dc-CA model with a trait covariate
 out2 <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,

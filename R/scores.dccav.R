@@ -61,29 +61,39 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
   if (scaling == "sites")  myconst <- sqrt(vegan:::nobs.cca(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
     if (scaling == "species") myconst <- sqrt(vegan:::nobs.cca(x$RDAonEnv))
 
-   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
-   sol <- list()
+  if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
+
+    sol <- list()
 
     if ("sites" %in% take){
     sol$sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("sites"), scaling = scaling,
                                        choices = choices, const = myconst)
+    attr(sol$sites, which = "meaning") <- "CMWs of the trait axes (constraints species) in 'Sites' scaling."
     }
     if ( "constraints" %in%take){
     sol$constraints_sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
                                     choices = choices, const = myconst)
+    attr(sol$constraints_sites, which = "meaning") <- c("linear combination of the environmental predictors",
+      "(and the covariates, so as to make the ordination axes orthogonal to the covariates)")
     }
    if ( "biplot" %in%take){
      sol$biplot  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
                                    choices = choices, const = myconst)
+     attr(sol$biplot, which = "meaning") <- "todo"
    }
 
    if ( "centroids" %in%take){
      sol$centroids  <- vegan:::scores.rda(x$RDAonEnv, display = c("cn"), scaling = scaling,
                                        choices = choices, const = myconst)
+     attr(sol$centroids, which = "meaning") <- "category means of the ordination axes  (constraints sites)"
    }
 
 
-    if ("regression"%in% take) sol$regression <- c_env_normed[,regchoices]
+    if ("regression"%in% take) {
+      sol$regression <- c_env_normed[,regchoices]
+      attr(sol$regression, which = "meaning")<-
+        "mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio"
+    }
     if ("correlation"%in% take) {
       sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("sites"), scaling = scaling,
                                    choices = choices)
@@ -94,17 +104,21 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
       Cormat <- cov2cor(cov(cbind( env0, sites)))
       Cor_Env_CWM <- Cormat[seq_len(ncol(env0)),ncol(env0) + seq_len(ncol(sites)) , drop = FALSE]
       colnames(Cor_Env_CWM) <- paste("CWM-ax", seq_len(ncol(Cor_Env_CWM)), sep= "")
-      attr(Cor_Env_CWM, which = "meaning")<-
-"inter set correlation, correlation between environmental variables and the sites scores (CWMs)"
+
       sol$correlation <- Cor_Env_CWM
+      attr(sol$correlation,  which = "meaning")<-
+        "inter set correlation, correlation between environmental variables and the sites scores (CWMs)"
     }
 
 # Species stats -----------------------------------------------------------
    if ( "species" %in%take) {
      sol$species <- species_axes$species[[1]][,choices, drop = FALSE]
+     attr(sol$species, which = "meaning")<- "SNC on the ordination axes (constraints sites), scaled to unit weighted sum of squares"
    }
    if ( "constraints_species" %in%take){
      sol$constraints_species <- species_axes$species[[2]][,choices, drop = FALSE]
+     attr(sol$constraints_species, which = "meaning")<- c("linear combination of the traits",
+        "(and the trait covariates, so as to make the ordination axes orthogonal to the trait covariates)")
    }
     if ("regression_traits"%in% take)sol$regression_traits <- species_axes$c_traits_normed[,regchoices]
     if ("correlation_traits"%in% take) {
@@ -115,6 +129,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
         cor_traits_SNC <- dcCA:::f_trait_axes(x, which_cor = whichc)
         sol$correlation_traits <- cor_traits_SNC$correlation[,choices, drop = FALSE]
       }
+      attr(sol$correlation_traits, which = "meaning")<-
+        "inter set correlation, correlation between traits and the species scores (SNCs)"
     }
 
    for (nam in names(sol)){

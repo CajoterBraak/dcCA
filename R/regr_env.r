@@ -20,7 +20,7 @@ VIF <- fVIF(step2$CCA$QR) #diag(XtX_inv)*sdsX^2
 
 colnames(tval) <- paste("tval", seq_len(ncol(tval)), sep = "")
 c_env_normed <- cbind(Avg = avgX, SDS = sdsX, VIF = VIF, c_env_normed[names(sdsX),],tval[names(sdsX),])
-attr(c_env_normed, "meaning") <- "mean, sd, VIF, standardized regression coefficients and their t-ratio"
+attr(c_env_normed, "meaning") <- "mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio"
 
 return(c_env_normed)
 }

@@ -33,6 +33,8 @@ including collinear variables and levels.}
 all scores are in a single data.frame, score type is identified by factor variable \code{score},
 the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
 See \code{\link[vegan]{scores.cca}}.}
+
+\item{`...`}{Other arguments passed to the the function (currently ignored).}
 }
 \description{
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
@@ -72,9 +74,11 @@ anova(out$RDAonEnv) # all option of anova.cca are available!
 
 mod_scores <- scores(out, display = "all")
 names(mod_scores)
-# mod_scores <- scores(out, display = "all", tidy = TRUE)
-# names(mod_scores)
-# levels(mod_scores$score)
+\dontrun{
+mod_scores <- scores(out, display = "all", tidy = TRUE)
+names(mod_scores)
+levels(mod_scores$score)
+}
 
 # for illustration: a dc-CA model with a trait covariate
 out2 <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,

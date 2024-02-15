@@ -9,10 +9,12 @@ scores(x, ...)
 \arguments{
 \item{x}{in package \code{dcCA}, an object of \code{\link{dc_CA_vegan}}, in package \code{vegan}
 an  ordination object, see also \code{\link[vegan]{cca.object}}.}
+
+\item{`...`}{Other arguments passed to the the function.}
 }
 \description{
 Takes the scores function to the dcCA library
 }
 \seealso{
-\code{\link{scores.dccav}},\code{\link[vegan]{scores}}
+\code{\link{scores.dccav}} and \code{\link[vegan]{scores}}
 }

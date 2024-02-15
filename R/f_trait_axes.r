@@ -31,11 +31,11 @@ f_trait_axes <- function(out, which_cor = "in model"){
 
 
   # correlations of the dataTraits with the SNC wrt the first axis
-  if (which_cor == "in model") in_model <- colnames(out$data$dataTraits)%in% colnames(attr(terms(out$CCAonTraits), which = "factors")) else
+  if (which_cor == "in model") in_model <- colnames(out$data$dataTraits)%in% colnames(attr(stats::terms(out$CCAonTraits), which = "factors")) else
     in_model = which_cor
   traits0 <-  stats::model.matrix(~.-1, constrasts = FALSE, data = out$data$dataTraits[, in_model, drop= FALSE])
   #traits0 <-  model.matrix(~. -1, constrasts = FALSE, data = out$data$dataTraits)
-  Cormat <- cov2cor(ade4::covwt(cbind( traits0, SNC), w= out$CCAonTraits$rowsum))
+  Cormat <- stats::cov2cor(ade4::covwt(cbind( traits0, SNC), w= out$CCAonTraits$rowsum))
   Cor_Trait_SNC <- Cormat[seq_len(ncol(traits0)),ncol(traits0) + seq_len(out$RDAonEnv$CCA$rank) , drop = FALSE]
   colnames(Cor_Trait_SNC) <- paste("SNC-ax", seq_len(ncol(Cor_Trait_SNC)), sep= "")
   attr(Cor_Trait_SNC, which = "meaning")<- "inter set correlation, correlation between traits and SNC of axes"

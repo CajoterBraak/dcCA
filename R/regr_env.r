@@ -18,7 +18,7 @@ avgX <- attr(step2$CCA$QR$qr, which= "scaled:center")
 sdsX = sqrt(colMeans(qr.X(step2$CCA$QR)^2))
 
 ## t-values of regression coefficients based on type = "canoco" residuals
-tval <- coef(step2)/sqrt(diag(stats::vcov(step2, type = "canoco")))
+tval <- stats::coef(step2)/sqrt(diag(stats::vcov(step2, type = "canoco")))
 
 VIF <- fVIF(step2$CCA$QR) #diag(XtX_inv)*sdsX^2
 

@@ -148,9 +148,11 @@ anova(out$RDAonEnv) # all option of anova.cca are available!
 
 mod_scores <- scores(out, display = "all")
 names(mod_scores)
-# mod_scores <- scores(out, display = "all", tidy = TRUE)
-# names(mod_scores)
-# levels(mod_scores$score)
+\dontrun{
+mod_scores <- scores(out, display = "all", tidy = TRUE)
+names(mod_scores)
+levels(mod_scores$score)
+}
 
 # for illustration: a dc-CA model with a trait covariate
 out2 <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,

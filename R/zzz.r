@@ -29,3 +29,9 @@
 #' @seealso \code{\link[vegan]{cca}}
 #' @name dcCA
 NULL
+.onLoad <- function(libname = find.package("dcCA"), pkgname = "dcCA"){
+  # CRAN Note avoidance
+  if (getRversion() >= "2.15.1")
+    utils::globalVariables(  c(".data"))
+  invisible()
+}

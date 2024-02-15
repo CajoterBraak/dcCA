@@ -27,6 +27,7 @@
 #'  all scores are in a single data.frame, score type is identified by factor variable \code{score},
 #'  the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
 #'  See \code{\link[vegan]{scores.cca}}.
+#' @param `...`  Other arguments passed to the the function (currently ignored).
 #' @details
 #' In current version: no \code{biplot} scores for traits.
 #' In current version: no \code{centroid} scores for traits.

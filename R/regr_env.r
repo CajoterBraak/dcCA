@@ -1,20 +1,24 @@
 #' Standardized regression coefficient with optimistic t-ratios and
 #' mean and standard deviation of the environmental variables
 #'
+#'
+#' @param out object from \code{\link{dc_CA_vegan}}
+#'
 #' @noRd
+# #' @export
 regr_env <-function(out){
 
 if (!class(out)[1]=="dccav") stop("The first argument must be the result of the function dc_CA_vegan.")
 
 step2 <- out$RDAonEnv
-c_env_normed <- as.matrix(vegan:::scores.rda(step2, display = "reg", scaling = "species", choices = 1:step2$CCA$rank))
+c_env_normed <- as.matrix(vegan::scores(step2, display = "reg", scaling = "species", choices = 1:step2$CCA$rank))
 c_env_normed <-   c_env_normed %*% diag(sqrt(step2$CCA$eig)) # in sites scaling
 colnames(c_env_normed) <- paste("Regr", seq_len(ncol(c_env_normed)), sep = "")
 avgX <- attr(step2$CCA$QR$qr, which= "scaled:center")
 sdsX = sqrt(colMeans(qr.X(step2$CCA$QR)^2))
 
 ## t-values of regression coefficients based on type = "canoco" residuals
-tval <- coef(step2)/sqrt(diag(vegan:::vcov.cca(step2, type = "canoco")))
+tval <- coef(step2)/sqrt(diag(stats::vcov(step2, type = "canoco")))
 
 VIF <- fVIF(step2$CCA$QR) #diag(XtX_inv)*sdsX^2
 

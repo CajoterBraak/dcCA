@@ -7,7 +7,7 @@
 \method{print}{dccav}(x, ...)
 }
 \arguments{
-\item{a}{dc-CA object from \code{\link{dc_CA_vegan}}}
+\item{x}{a dc-CA object from \code{\link{dc_CA_vegan}}}
 }
 \description{
 Print a summary of a dc-CA object

@@ -1,5 +1,5 @@
 #' Print a summary of a dc-CA object
-#' @param a dc-CA object from \code{\link{dc_CA_vegan}}
+#' @param x a dc-CA object from \code{\link{dc_CA_vegan}}
 #' @details
 #' \code{x <- print(x)} is more efficient for \code{\link{scores.dccav}} than just \code{print(x)}
 #' if \code{\link{dc_CA_vegan}} is called without argument \code{verbose} (or called with \code{verbose = FALSE}).
@@ -9,8 +9,8 @@
 print.dccav <- function(x, ...){
 
   if (!"species_axes"%in%names(x)){
-    x$c_env_normed <- dcCA:::regr_env(x)
-    x$species_axes <- dcCA:::f_trait_axes(x)
+    x$c_env_normed <- regr_env(x)
+    x$species_axes <- f_trait_axes(x)
     x$c_traits_normed <- x$species_axes$c_traits_normed
   }
   choices <- c(1:4);

@@ -84,7 +84,8 @@
 #' }
 #'  }
 #' }
-#' if \code{verbose} is \code{TRUE} there are three more items (in this version).
+#' If \code{verbose} is \code{TRUE} (or after \code{out <-print(out)} is invoked )
+#' there are three more items (in this version).
 #' \itemize{
 #' \item \code{c_traits_normed}: mean, sd, VIF and (regression) coefficients of
 #'  the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.
@@ -132,7 +133,7 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     if (ft[1] == "~")  ft2 <- paste0(response, ft[1], ft[-1], collapse = " ") else
       ft2 <- paste0(response, ft[1], ft[-c(1,2)], collapse = " ")
 
-    f2 <- as.formula(ft2)
+    f2 <- stats::as.formula(ft2)
     return(f2)
   }
 

@@ -39,7 +39,8 @@ dat <- out$data$dataEnv
 dat$composite_env <- mod_scores$constraints_sites[,axis]
 dat$CWM_composite_trait <- mod_scores$sites[,axis]
 
-site_groups<- PRC::get_focal_and_conditioning_factors(out$RDAonEnv)$condition # site groups
+#site_groups<- PRC::get_focal_and_conditioning_factors(out$RDAonEnv)$condition # site groups
+site_groups<- NULL  # no site groups
 if (!is.null(site_groups)) dat$site_groups <- dat[[site_groups]]
 
 library(ggplot2)

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
-#' in particuluar \code{\link[vegan]{scores.cca}}, with the additional results such
+#' in particular \code{\link[vegan]{scores.cca}}, with the additional results such
 #' as regression coefficients and linear combinations of traits \code{('regr_traits','lc_traits')}
 #' In the current version, there is a single scaling (\code{scaling = "sites"}).
 #' All scores from CA obey the so called transition formulas and so do the scores of CCA and dc-CA.
@@ -23,11 +23,13 @@
 #' for which inter-set correlations must calculated.
 #' Default: a character ("in_model") for all traits and variables in the model,
 #' including collinear variables and levels.
-#'
+#' @param tidy Return scores that are compatible with \code{ggplot2}:
+#'  all scores are in a single data.frame, score type is identified by factor variable \code{score},
+#'  the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
+#'  See \code{\link[vegan]{scores.cca}}.
 #' @details
-#' In current version: no biplot scores for traits
-#' In current version: no centroid scores for traits
-#'
+#' In current version: no \code{biplot} scores for traits.
+#' In current version: no \code{centroid} scores for traits.
 #' @example demo/dune_dcCA.R
 #' @export
 scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in model", tidy = FALSE,...){
@@ -37,7 +39,9 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
  tabula <- c("species", "sites", "constraints", "biplot", "correlation",
              "regression", "centroids", "constraints_species", "regression_traits", "correlation_traits" )
  names(tabula) <- c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits")
-  display <- match.arg(display, c(names(tabula), "all"),
+ #print("here is scores.dccav")
+ display <- match.arg(display,
+                      c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits","sites", "species", "all"),
                       several.ok = TRUE)
  ## set "all" for tidy scores
  if (tidy)
@@ -58,32 +62,32 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){c_env_normed <- x$c_env_normed; species_axes<- x$species_axes}
 
-  if (scaling == "sites")  myconst <- sqrt(vegan:::nobs.cca(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
-    if (scaling == "species") myconst <- sqrt(vegan:::nobs.cca(x$RDAonEnv))
+  if (scaling == "sites")  myconst <- sqrt(nrow(out$RDAonEnv$CCA$u)*x$RDAonEnv$tot.chi) else
+    if (scaling == "species") myconst <- sqrt(nrow(out$RDAonEnv$CCA$u))
 
   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
 
     sol <- list()
 
     if ("sites" %in% take){
-    sol$sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("sites"), scaling = scaling,
+    sol$sites  <- vegan::scores(x$RDAonEnv, display = c("sites"), scaling = scaling,
                                        choices = choices, const = myconst)
     attr(sol$sites, which = "meaning") <- "CMWs of the trait axes (constraints species) in 'Sites' scaling."
     }
     if ( "constraints" %in%take){
-    sol$constraints_sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
+    sol$constraints_sites  <- vegan::scores(x$RDAonEnv, display = c("lc"), scaling = scaling,
                                     choices = choices, const = myconst)
     attr(sol$constraints_sites, which = "meaning") <- c("linear combination of the environmental predictors",
       "(and the covariates, so as to make the ordination axes orthogonal to the covariates)")
     }
    if ( "biplot" %in%take){
-     sol$biplot  <- vegan:::scores.rda(x$RDAonEnv, display = c("lc"), scaling = scaling,
+     sol$biplot  <- vegan::scores(x$RDAonEnv, display = c("lc"), scaling = scaling,
                                    choices = choices, const = myconst)
      attr(sol$biplot, which = "meaning") <- "todo"
    }
 
    if ( "centroids" %in%take){
-     sol$centroids  <- vegan:::scores.rda(x$RDAonEnv, display = c("cn"), scaling = scaling,
+     sol$centroids  <- vegan::scores(x$RDAonEnv, display = c("cn"), scaling = scaling,
                                        choices = choices, const = myconst)
      attr(sol$centroids, which = "meaning") <- "category means of the ordination axes  (constraints sites)"
    }
@@ -95,13 +99,13 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
         "mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio"
     }
     if ("correlation"%in% take) {
-      sites  <- vegan:::scores.rda(x$RDAonEnv, display = c("sites"), scaling = scaling,
+      sites  <- vegan::scores(x$RDAonEnv, display = c("sites"), scaling = scaling,
                                    choices = choices)
       # correlations of the dataEnv wrt the first axis (site scores)
-      if (!is.list(which_cor )) in_model <- colnames(x$data$dataEnv)%in% colnames(attr(terms(x$RDAonEnv), which = "factors")) else
+      if (!is.list(which_cor )) in_model <- colnames(x$data$dataEnv)%in% colnames(attr(stats::terms(x$RDAonEnv), which = "factors")) else
         in_model = which_cor[[2]]
-      env0 <-  model.matrix(~.-1, constrasts = FALSE, data = x$data$dataEnv[, in_model, drop = FALSE])
-      Cormat <- cov2cor(cov(cbind( env0, sites)))
+      env0 <-  stats::model.matrix(~.-1, constrasts = FALSE, data = x$data$dataEnv[, in_model, drop = FALSE])
+      Cormat <- stats::cov2cor(stats::cov(cbind( env0, sites)))
       Cor_Env_CWM <- Cormat[seq_len(ncol(env0)),ncol(env0) + seq_len(ncol(sites)) , drop = FALSE]
       colnames(Cor_Env_CWM) <- paste("CWM-ax", seq_len(ncol(Cor_Env_CWM)), sep= "")
 
@@ -126,7 +130,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
         sol$correlation_traits <- species_axes$correlation[,choices, drop = FALSE]
       } else{
         whichc = which_cor[[1]]
-        cor_traits_SNC <- dcCA:::f_trait_axes(x, which_cor = whichc)
+        cor_traits_SNC <- f_trait_axes(x, which_cor = whichc)
         sol$correlation_traits <- cor_traits_SNC$correlation[,choices, drop = FALSE]
       }
       attr(sol$correlation_traits, which = "meaning")<-
@@ -165,8 +169,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
      group <- rep(names(group), group)
      sol <- do.call(rbind, sol)
      label <- rownames(sol)
-     cw <- weights(x$CCAonTraits, "sites") # weights(x) can fail with na.action=na.exclude
-     rw <- weights(x$RDAonEnv, "sites")
+     cw <- vegan::weights(x$CCAonTraits, "sites") # weights(x) can fail with na.action=na.exclude
+     rw <- vegan::weights(x$RDAonEnv, "sites")
      w <- rep(NA, nrow(sol))
      if (any(weighted <- group == "sites"))
        w[weighted] <- rw

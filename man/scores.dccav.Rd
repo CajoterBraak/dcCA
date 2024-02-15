@@ -28,10 +28,15 @@ and remaining ones are similar scores for traits.}
 for which inter-set correlations must calculated.
 Default: a character ("in_model") for all traits and variables in the model,
 including collinear variables and levels.}
+
+\item{tidy}{Return scores that are compatible with \code{ggplot2}:
+all scores are in a single data.frame, score type is identified by factor variable \code{score},
+the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
+See \code{\link[vegan]{scores.cca}}.}
 }
 \description{
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
-in particuluar \code{\link[vegan]{scores.cca}}, with the additional results such
+in particular \code{\link[vegan]{scores.cca}}, with the additional results such
 as regression coefficients and linear combinations of traits \code{('regr_traits','lc_traits')}
 In the current version, there is a single scaling (\code{scaling = "sites"}).
 All scores from CA obey the so called transition formulas and so do the scores of CCA and dc-CA.
@@ -42,8 +47,8 @@ that the linear combinations of traits (the \emph{constrained} species scores)
 also replace the usual (\emph{unconstrained}) species scores.
 }
 \details{
-In current version: no biplot scores for traits
-In current version: no centroid scores for traits
+In current version: no \code{biplot} scores for traits.
+In current version: no \code{centroid} scores for traits.
 }
 \examples{
 

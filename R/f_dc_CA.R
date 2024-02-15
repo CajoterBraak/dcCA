@@ -15,7 +15,7 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
 
   # Perform QR decomposition on the weighted design matrix
   if (!is.qr(X_or_qr_decomp_of_X)) {
-    X_weighted <-  X *sqrtw
+    X_weighted <-  X_or_qr_decomp_of_X *sqrtw
     X_or_qr_decomp_of_X <- qr(X_weighted)
   }
 
@@ -91,44 +91,6 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
   return(out1)
 }
 
-f_trait_axes <- function(out, which_cor = "in model"){
-# which_cor character or mames of traits
-# for which inter-set correlations must calculated.
-#  Default "in_model" for all traits and variables in the model
-# SNC lc_traits and trait regr, tval, cor
-  lc_scores  <- vegan:::scores.rda(out$RDAonEnv, display = c("lc"), scaling = "species",
-                              choices = seq_len(out$RDAonEnv$CCA$rank), const = sqrt(nobs(out$RDAonEnv)))
-
-  SNC <-  (t(as.matrix(out$data$Y)) %*% lc_scores) / (out$CCAonTraits$rowsum * nobs(out$RDAonEnv))
-
-  if (!is.null(out$CCAonTraits$pCCA)){  # orthogalize with respect to any covariate
-    SNC <- SNC - calculate_b_se_tval(out$CCAonTraits$pCCA$QR, y=SNC,
-                               w = out$CCAonTraits$rowsum,  scale2 = 0, name = "SNC", fitted_only = TRUE)
-  }
-  #print(names(out))
-  res <- calculate_b_se_tval(out$CCAonTraits$CCA$QR, y=SNC,
-                             w = out$CCAonTraits$rowsum,  scale2 = 1, name = "SNC")
-
-  #print(names(res))
-
-  c_traits_normed <- res$coef_normed
-  attr(c_traits_normed, which = "warning") <-"The t-values are optimistic, i.e. an underestimate of their true absolute value"
-
-
-  # correlations of the dataTraits with the SNC wrt the first axis
-  if (which_cor == "in model") in_model <- colnames(out$data$dataTraits)%in% colnames(attr(terms(out$CCAonTraits), which = "factors")) else
-    in_model = which_cor
-  traits0 <-  model.matrix(~.-1, constrasts = FALSE, data = out$data$dataTraits[, in_model, drop= FALSE])
-  #traits0 <-  model.matrix(~. -1, constrasts = FALSE, data = out$data$dataTraits)
-  Cormat <- cov2cor(ade4::covwt(cbind( traits0, SNC), w= out$CCAonTraits$rowsum))
-  Cor_Trait_SNC <- Cormat[seq_len(ncol(traits0)),ncol(traits0) + seq_len(out$RDAonEnv$CCA$rank) , drop = FALSE]
-  colnames(Cor_Trait_SNC) <- paste("SNC-ax", seq_len(ncol(Cor_Trait_SNC)), sep= "")
-  attr(Cor_Trait_SNC, which = "meaning")<- "inter set correlation, correlation between traits and SNC of axes"
-
-  out2 <- list(species_scores = list(species_scores_unconstrained = res$y,
-      lc_traits_scores = res$fitted), correlation = Cor_Trait_SNC, c_traits_normed= c_traits_normed, b_se= res$b_se, R2_traits = res$R2)
-  return(out2)
-}
 
 
 

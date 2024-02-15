@@ -30,7 +30,7 @@
 #' @example demo/dune_plot_dcCA.R
 #' @export
 
-plot_species_scores_bk <- function(species_scores, ylab = latex2exp::TeX("$b_k$"), threshold=7, y_lab_interval=0.5,
+plot_species_scores_bk <- function(species_scores, ylab = "scores", threshold=7, y_lab_interval=0.5,
                                    speciesname= NULL, scoresname = "RDA1",selectname = "Fratio1", expand= 0.2, verbose = TRUE){
 
 # species_scores is a matrix or dataframe  with rownames and a column with name scoresname (default: "RDA1") (species scores from vegan, for example)
@@ -92,9 +92,9 @@ labelline.full=data.frame(species=rep(rownames(species),each=2),
                           x.coor=rep(c(0.00 ,0.02),nrow(species)),
                           y.coor=rep(species$scores,each=2))
 
-pl.bk=ggplot2::ggplot(data=species,ggplot2::aes(y=scores,group=species,x=0))+
+pl.bk=ggplot2::ggplot(data=species,ggplot2::aes(y=scores,group=.data[["species"]],x=0))+
   ggplot2::coord_cartesian(xlim=c(0,1),ylim=c(min(ymin, min(bk_breaks))-expand,max(ymax, bk_breaks)+expand))+
-  ggplot2::geom_line(data=labelline.full,ggplot2::aes(x=x.coor,y=y.coor,group=species), # empty name species
+  ggplot2::geom_line(data=labelline.full,ggplot2::aes(x=.data[["x.coor"]],y=.data[["y.coor"]],group=.data[["species"]]), # empty name species
             linewidth=1.5*5/14,colour="#F51F63")+                          # empty name species
   ggplot2::scale_x_continuous(expand = c(0, 0)) +
   ggplot2::theme(
@@ -119,9 +119,9 @@ pl.bk=ggplot2::ggplot(data=species,ggplot2::aes(y=scores,group=species,x=0))+
   labelline$y.coor[seq(from=3,to=nrow(labelline),by=4)]<-species.sub$y.label.loc
   labelline$y.coor[seq(from=4,to=nrow(labelline),by=4)]<-species.sub$y.label.loc
    pl.bk <- pl.bk +
-     ggplot2::geom_text(data=species.sub,ggplot2::aes(label=species,x=0.18,y=y.label.loc),hjust=0,
+     ggplot2::geom_text(data=species.sub,ggplot2::aes(label=.data[["species"]],x=0.18,y=.data[["y.label.loc"]]),hjust=0,
                      size=7*(5/14),fontface = "italic")+
-     ggplot2::geom_line(data=labelline,ggplot2::aes(x=x.coor,y=y.coor,group=species),
+     ggplot2::geom_line(data=labelline,ggplot2::aes(x=.data[["x.coor"]],y=.data[["y.coor"]],group=.data[["species"]]),
                        linewidth=1*5/14,colour="grey50")
   }
 return(pl.bk)

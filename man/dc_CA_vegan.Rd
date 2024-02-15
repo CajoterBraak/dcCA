@@ -65,7 +65,8 @@ This is the maximum that the row predictors could explain in dc-CA
 }
  }
 }
-if \code{verbose} is \code{TRUE} there are three more items (in this version).
+If \code{verbose} is \code{TRUE} (or after \code{out <-print(out)} is invoked )
+there are three more items (in this version).
 \itemize{
 \item \code{c_traits_normed}: mean, sd, VIF and (regression) coefficients of
  the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.

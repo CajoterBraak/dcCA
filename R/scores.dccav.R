@@ -62,8 +62,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){c_env_normed <- x$c_env_normed; species_axes<- x$species_axes}
 
-  if (scaling == "sites")  myconst <- sqrt(nrow(out$RDAonEnv$CCA$u)*x$RDAonEnv$tot.chi) else
-    if (scaling == "species") myconst <- sqrt(nrow(out$RDAonEnv$CCA$u))
+  if (scaling == "sites")  myconst <- sqrt(nrow(x$RDAonEnv$CCA$u)*x$RDAonEnv$tot.chi) else
+    if (scaling == "species") myconst <- sqrt(nrow(x$RDAonEnv$CCA$u))
 
   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
 

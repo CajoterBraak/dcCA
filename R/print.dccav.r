@@ -1,6 +1,6 @@
 #' Print a summary of a dc-CA object
 #' @param x a dc-CA object from \code{\link{dc_CA_vegan}}
-#' @param `...`  Other arguments passed to the the function (currently ignored).
+#' @param ...  Other arguments passed to the function (currently ignored).
 #' @example demo/dune_plot_dcCA.r
 #' @details
 #' \code{x <- print(x)} is more efficient for \code{\link{scores.dccav}} than just \code{print(x)}

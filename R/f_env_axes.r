@@ -4,7 +4,7 @@
 #' for which inter-set correlations must calculated.
 #' Default: "in_model" for all environmental variables in the model specified by \code{formulaEnv}.
 #' @noRd
-#' @export
+# @export
 f_env_axes <- function(out, which_cor = "in model"){
   # which_cor character or names of environmental variables
   # for which inter-set correlations must calculated.
@@ -30,6 +30,7 @@ f_env_axes <- function(out, which_cor = "in model"){
   colnames(Cor_Env_CWM) <- paste("CWM-ax", seq_len(ncol(Cor_Env_CWM)), sep= "")
   attr(Cor_Env_CWM, which = "meaning")<- "inter set correlation, correlation between environmental variables and CWM of axes"
 
-  out2 <- list( c_env_normed= c_env_normed, b_se= res$b_se, R2_env = res$R2, correlation = Cor_Env_CWM)
+  out2 <- list(site_scores = list(site_scores_unconstrained = res$y,
+                                     lc_env_scores = res$fitted), c_env_normed= c_env_normed, b_se= res$b_se, R2_env = res$R2, correlation = Cor_Env_CWM)
   return(out2)
 }

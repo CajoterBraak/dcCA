@@ -10,7 +10,7 @@ scores(x, ...)
 \item{x}{in package \code{dcCA}, an object of \code{\link{dc_CA_vegan}}, in package \code{vegan}
 an  ordination object, see also \code{\link[vegan]{cca.object}}.}
 
-\item{`...`}{Other arguments passed to the the function.}
+\item{...}{Other arguments passed to the function.}
 }
 \description{
 Takes the scores function to the dcCA library

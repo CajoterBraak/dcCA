@@ -27,7 +27,7 @@
 #'  all scores are in a single data.frame, score type is identified by factor variable \code{score},
 #'  the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
 #'  See \code{\link[vegan]{scores.cca}}.
-#' @param `...`  Other arguments passed to the the function (currently ignored).
+#' @param ...  Other arguments passed to the function (currently ignored).
 #' @details
 #' In current version: no \code{biplot} scores for traits.
 #' In current version: no \code{centroid} scores for traits.
@@ -57,13 +57,12 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
    display <- names(tabula)
  take <- tabula[display]
 
-  if ((!"species_axes"%in%names(x)) && any(c("species",
-           "constraints_species", "regression_traits", "correlation_traits")%in% take)){
+  if (!"species_axes"%in%names(x)){
     site_axes <- f_env_axes(x)
     c_env_normed <- site_axes$c_traits_normed
     species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){
-    c_env_normed <- x$c_env_normed; species_axes<- x$species_axes;site_axes<- x$site_axes
+    c_env_normed <- x$c_env_normed; species_axes<- x$species_axes; site_axes<- x$site_axes
     }
 
   if (scaling == "sites")  myconst <- sqrt(stats::nobs(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
@@ -75,13 +74,17 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     sol <- list()
 
     if ("sites" %in% take){
-    sol$sites  <- vegan::scores(x$RDAonEnv, display = c("sites"), scaling = scaling,
-                                       choices = choices, const = myconst)
+    # sol$sites  <- vegan::scores(x$RDAonEnv, display = c("sites"), scaling = scaling,
+    #                                    choices = choices, const = myconst)
+    sol$sites <- site_axes$site_scores[[1]][,choices, drop = FALSE]
+
     attr(sol$sites, which = "meaning") <- "CMWs of the trait axes (constraints species) in 'Sites' scaling."
     }
     if ( "constraints" %in%take){
-    sol$constraints_sites  <- vegan::scores(x$RDAonEnv, display = c("lc"), scaling = scaling,
-                                    choices = choices, const = myconst)
+    #sol$constraints_sites  <- vegan::scores(x$RDAonEnv, display = c("lc"), scaling = scaling,
+    #                                choices = choices, const = myconst)
+    sol$constraints_sites <- site_axes$site_scores[[2]][,choices, drop = FALSE]
+
     attr(sol$constraints_sites, which = "meaning") <- c("linear combination of the environmental predictors",
       "(and the covariates, so as to make the ordination axes orthogonal to the covariates)")
     }
@@ -117,11 +120,11 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
 
 # Species stats -----------------------------------------------------------
    if ( "species" %in%take) {
-     sol$species <- species_axes$species[[1]][,choices, drop = FALSE]
+     sol$species <- species_axes$species_scores[[1]][,choices, drop = FALSE]
      attr(sol$species, which = "meaning")<- "SNC on the ordination axes (constraints sites), scaled to unit weighted sum of squares"
    }
    if ( "constraints_species" %in%take){
-     sol$constraints_species <- species_axes$species[[2]][,choices, drop = FALSE]
+     sol$constraints_species <- species_axes$species_scores[[2]][,choices, drop = FALSE]
      attr(sol$constraints_species, which = "meaning")<- c("linear combination of the traits",
         "(and the trait covariates, so as to make the ordination axes orthogonal to the trait covariates)")
    }

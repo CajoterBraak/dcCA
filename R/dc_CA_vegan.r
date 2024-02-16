@@ -91,7 +91,7 @@
 #'  the traits that define the dc-CA trait axes (composite traits), and their optimistic t-ratio.
 #' \item \code{c_env_normed}:  mean, sd, VIF and (regression) coefficients of the environmental variables that define the dc-CA axes
 #'  in terms of the environmental variables (composite gradients), and their optimistic t-ratio.
-#' \item \code{species_axes}: a list with three items
+#' \item \code{species_axes}: a list with four items
 #'  \itemize{
 #'  \item \code{species_scores}: a list with names \code{c("species_scores_unconstrained", "lc_traits_scores")} with the
 #'  matrix with species niche centroids along the dc-CA axes (composite gradients) and
@@ -101,6 +101,17 @@
 #'  \item \code{R2_traits}: a vector with coefficient of determination (R2) of the SNCs on to the traits.
 #'  The square-root thereof could be called the species-trait correlation in analogy with
 #'  the species-environment correlation in CCA.
+#'  }
+#'  \item \code{sites_axes}: a list with four items
+#'  \itemize{
+#'  \item \code{site_scores}: a list with names \code{c("site_scores_unconstrained", "lc_env_scores")} with the
+#'  matrix with community weighted means (CWMs) along the dc-CA axes (composite gradients) and
+#'  the matrix with linear combinations of environmental variables.
+#'  \item \code{correlation}: a matrix with inter-set correlations of the environmental variables with their CWMs.
+#'  \item \code{b_se}: a matrix with (unstandardized) regression coefficients for environmental
+#'  variables and their optimistic standard errors.
+#'  \item \code{R2_env}: a vector with coefficient of determination (R2) of the CWMs on to the environmental variables.
+#'  The square-root thereof has been called the species-environmental correlation in CCA.
 #'  }
 #'
 #' }

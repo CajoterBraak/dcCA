@@ -4,7 +4,7 @@
 #' for which inter-set correlations must calculated.
 #' Default: "in_model" for all traits and variables in the model specified by \code{formulaTraits}.
 #' @noRd
-#' @export
+# @export
 f_trait_axes <- function(out, which_cor = "in model"){
   # which_cor character or names of traits
   # for which inter-set correlations must calculated.

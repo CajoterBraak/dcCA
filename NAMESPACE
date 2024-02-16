@@ -3,7 +3,5 @@
 S3method(print,dccav)
 S3method(scores,dccav)
 export(dc_CA_vegan)
-export(f_env_axes)
-export(f_trait_axes)
 export(plot_species_scores_bk)
 export(scores)

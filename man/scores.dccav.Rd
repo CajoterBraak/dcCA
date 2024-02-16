@@ -34,7 +34,7 @@ all scores are in a single data.frame, score type is identified by factor variab
 the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
 See \code{\link[vegan]{scores.cca}}.}
 
-\item{`...`}{Other arguments passed to the the function (currently ignored).}
+\item{...}{Other arguments passed to the function (currently ignored).}
 }
 \description{
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,

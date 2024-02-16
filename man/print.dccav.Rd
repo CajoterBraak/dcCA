@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{a dc-CA object from \code{\link{dc_CA_vegan}}}
 
-\item{`...`}{Other arguments passed to the the function (currently ignored).}
+\item{...}{Other arguments passed to the function (currently ignored).}
 }
 \description{
 Print a summary of a dc-CA object

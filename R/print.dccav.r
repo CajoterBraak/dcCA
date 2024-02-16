@@ -11,8 +11,9 @@
 print.dccav <- function(x, ...){
 
   if (!"species_axes"%in%names(x)){
-    x$c_env_normed <- regr_env(x)
+    x$site_axes <-  f_env_axes(x)
     x$species_axes <- f_trait_axes(x)
+    x$c_env_normed <- x$site_axes$c_env_normed
     x$c_traits_normed <- x$species_axes$c_traits_normed
   }
   choices <- c(1:4);

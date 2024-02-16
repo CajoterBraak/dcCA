@@ -94,9 +94,10 @@ Rank_mod <- function(object, partial = FALSE){
   if ("dccav" %in% class(object)) {
     rr <- length(object$eigenvalues)
   } else if ("cca" %in% class(object) && !partial){
-    rr <- get_QR(object, model = "CCA")$rank #length(vegan::eigenvals(object, model = "constrained"))
+    rr <- length(vegan::eigenvals(object, model = "constrained"))
   } else if ("cca" %in% class(object) && partial){
-    rr <- get_QR(object, model = "pCCA")$rank
+    stop ("rank of pCCA model not implemented")
+    #rr <- get_QR(object, model = "pCCA")$rank
   } else stop("object in Rank_mod must be of class cca or dccav")
   return(rr)
 }

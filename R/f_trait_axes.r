@@ -30,7 +30,7 @@ f_trait_axes <- function(out, which_cor = "in model"){
   attr(c_traits_normed, which = "warning") <-"The t-values are optimistic, i.e. an underestimate of their true absolute value"
 
 
-  # correlations of the dataTraits with the SNC wrt the first axis
+  # correlations of the dataTraits with the SNC wrt the axes
   if (which_cor == "in model") in_model <- colnames(out$data$dataTraits)%in% colnames(attr(stats::terms(out$CCAonTraits), which = "factors")) else
     in_model = which_cor
   traits0 <-  stats::model.matrix(~.-1, constrasts = FALSE, data = out$data$dataTraits[, in_model, drop= FALSE])

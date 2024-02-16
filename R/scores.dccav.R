@@ -59,9 +59,12 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
 
   if ((!"species_axes"%in%names(x)) && any(c("species",
            "constraints_species", "regression_traits", "correlation_traits")%in% take)){
-    c_env_normed <- regr_env(x)
+    site_axes <- f_env_axes(x)
+    c_env_normed <- site_axes$c_traits_normed
     species_axes <- f_trait_axes(x)
-  } else if ("species_axes"%in%names(x)){c_env_normed <- x$c_env_normed; species_axes<- x$species_axes}
+  } else if ("species_axes"%in%names(x)){
+    c_env_normed <- x$c_env_normed; species_axes<- x$species_axes;site_axes<- x$site_axes
+    }
 
   if (scaling == "sites")  myconst <- sqrt(stats::nobs(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
     if (scaling == "species") myconst <- sqrt(stats::nobs(x$RDAonEnv))
@@ -101,17 +104,13 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
         "mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio"
     }
     if ("correlation"%in% take) {
-      sites  <- vegan::scores(x$RDAonEnv, display = c("sites"), scaling = scaling,
-                                   choices = choices)
-      # correlations of the dataEnv wrt the first axis (site scores)
-      if (!is.list(which_cor )) in_model <- colnames(x$data$dataEnv)%in% colnames(attr(stats::terms(x$RDAonEnv), which = "factors")) else
-        in_model = which_cor[[2]]
-      env0 <-  stats::model.matrix(~.-1, constrasts = FALSE, data = x$data$dataEnv[, in_model, drop = FALSE])
-      Cormat <- stats::cov2cor(stats::cov(cbind( env0, sites)))
-      Cor_Env_CWM <- Cormat[seq_len(ncol(env0)),ncol(env0) + seq_len(ncol(sites)) , drop = FALSE]
-      colnames(Cor_Env_CWM) <- paste("CWM-ax", seq_len(ncol(Cor_Env_CWM)), sep= "")
-
-      sol$correlation <- Cor_Env_CWM
+        if (!is.list(which_cor)){
+          sol$correlation <- site_axes$correlation[,choices, drop = FALSE]
+        } else{
+          whichc = which_cor[[2]]
+          cor_env_CWM <- f_env_axes(x, which_cor = whichc)
+          sol$correlation <- cor_env_CWM$correlation[,choices, drop = FALSE]
+        }
       attr(sol$correlation,  which = "meaning")<-
         "inter set correlation, correlation between environmental variables and the sites scores (CWMs)"
     }

@@ -55,14 +55,14 @@ round(fit_measures, 3) # best = Moist ; significant, also after correction for m
 
 
 
-best_env <- "Moist"
+chosen_env <- "Moist"
 
 
 # step 2 ------------------------------------------------------------------
-fit_measuresL[[best_env]] <- fit_measures
-considered <- c(considered, consider[best_env])
+fit_measuresL[[chosen_env]] <- fit_measures
+considered <- c(considered, consider[chosen_env])
 
-considerk <- consider[-which(consider  %in% best_env)] # remove Moist
+considerk <- consider[-which(consider  %in% chosen_env)] # remove Moist
 
 
 fit_measures <- matrix(NA, nrow = length(considerk), ncol = 2)
@@ -86,12 +86,12 @@ for (k in seq_along(considerk)){
 pvaladj <- p.adjust(fit_measures[,"pval1"], method = p.adjust.method)
 fit_measures <- cbind(fit_measures,pvaladj )
 round(fit_measures, 3) # best =Manure ; significant, also after correction for multiple testing (given step1)
-best_env <- "Manure"
+chosen_env <- "Manure"
 
 # step 3 ------------------------------------------------------------------
-fit_measuresL[[best_env]] <- fit_measures
-considered <- c(considered, consider[best_env])
-considerk <- considerk[-which(considerk  %in% best_env)]
+fit_measuresL[[chosen_env]] <- fit_measures
+considered <- c(considered, consider[chosen_env])
+considerk <- considerk[-which(considerk  %in% chosen_env)]
 
 fit_measures <- matrix(NA, nrow = length(considerk), ncol = 2)
 colnames(fit_measures) <- c("eig1","pval1")
@@ -113,9 +113,9 @@ for (k in seq_along(considerk)){
 pvaladj <- p.adjust(fit_measures[,"pval1"], method = p.adjust.method)
 fit_measures <- cbind(fit_measures,pvaladj )
 round(fit_measures, 3) # best =Mag; not significant
-best_env <- "Mag"
+chosen_env <- "Mag"
 
-fit_measuresL[[best_env]] <- fit_measures
+fit_measuresL[[chosen_env]] <- fit_measures
 
 
 fit_measuresL

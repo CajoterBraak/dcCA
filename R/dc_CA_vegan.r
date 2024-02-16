@@ -177,26 +177,25 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
   }
   n <- nrow(out1$data$Y)
   CWMs_orthonormal_traits <- vegan::scores(step1, display= "species",
-                scaling = "species", choices = 1:step1$CCA$rank) * sqrt((n-1)/n)
+                scaling = "species", choices = 1:Rank_mod(step1)) * sqrt((n-1)/n)
   if (rownames(CWMs_orthonormal_traits)[1]=="col1") rownames(CWMs_orthonormal_traits) <- paste("Sam", seq_len((nrow(out1$data$dataEnv))),sep="")
   formulaEnv <- change_reponse(formulaEnv, "CWMs_orthonormal_traits")
   environment(formulaEnv)<- environment()
   step2 <- vegan::rda(formulaEnv, data = out1$data$dataEnv)
-  inertia <- cbind(c(total= step1$tot.chi,conditionT = step1$pCCA$tot.chi, traits_explain = step1$CCA$tot.chi, conditionE = step2$pCCA$tot.chi, constraintsE = step2$CCA$tot.chi ))
-  colnames(inertia)<- "weigthed variance"
-  expla <- c("total inertia","inertia of the trait condition", "trait-constrained inertia",
-       "trait-constrained inertia explained by the condition in formulaEnv",
-       "trait-constrained inertia explained by the predictors in formulaEnv")
-  names(expla) <- c("total","conditionT","traits_explain","conditionE","constraintsE")
-  attr(inertia, which = "meaning") <-  matrix( expla[rownames(inertia)], ncol=1,
-                                                dimnames = list(rownames(inertia),"meaning"))
+
 
 
   out <- c(out1, list(RDAonEnv = step2,
                       formulaEnv = formulaEnv,
-                      eigenvalues =  step2$CCA$eig,
-                      inertia = inertia))
+                      eigenvalues =  vegan::eigenvals(step2, model = "constrained")
+                      )
+  )
   class(out) <- c("dccav", "list")
+
+  out$inertia <- try(f_inertia(out))
+
+
+
   if (verbose) out<-print.dccav(out)
   return(out)
 }

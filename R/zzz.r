@@ -17,6 +17,11 @@
 #' -not yet available- for species-based permutation tests.
 #' The technical reason for the closure, is that \code{vegan} \code{\link[vegan]{rda}} cannot do a weighted analysis.
 #'
+#' Warning: The \code{dcCA} package was built from \code{vegan} version 2.6-4 and uses some of the
+#' internal structure of the \code{vegan} \code{\link[vegan]{cca.object}}
+#' in the not-exported functions \code{f_inertia} and \code{get_QR}
+#' in the source code file \code{functions_using_cca_object_internals.r} .
+#'
 #'
 #' @references
 #'

@@ -10,19 +10,19 @@ f_trait_axes <- function(out, which_cor = "in model"){
   # for which inter-set correlations must calculated.
   #  Default "in_model" for all traits and variables in the model
   # SNC lc_traits and trait regr, tval, cor
-  N <- nrow(out$RDAonEnv$CCA$u)
+  N <- stats::nobs(out$RDAonEnv)
   lc_scores  <- vegan::scores(out$RDAonEnv, display = c("lc"), scaling = "species",
-                                   choices = seq_len(out$RDAonEnv$CCA$rank), const = sqrt(N))
+                                   choices = seq_len(Rank_mod(out$RDAonEnv)), const = sqrt(N))
 
   SNC <-  (t(as.matrix(out$data$Y)) %*% lc_scores) / (out$CCAonTraits$rowsum * N)
 
   if (!is.null(out$CCAonTraits$pCCA)){  # orthogalize with respect to any covariate
-    SNC <- SNC - calculate_b_se_tval(out$CCAonTraits$pCCA$QR, y=SNC,
-                                     w = out$CCAonTraits$rowsum,  scale2 = 0, name = "SNC", fitted_only = TRUE)
+    SNC <- SNC - calculate_b_se_tval(get_QR(out$CCAonTraits, model= "pCCA"), y=SNC,
+                                     w = stats::weights(out$CCAonTraits, "sites"),  scale2 = 0, name = "SNC", fitted_only = TRUE)
   }
   #print(names(out))
-  res <- calculate_b_se_tval(out$CCAonTraits$CCA$QR, y=SNC,
-                             w = out$CCAonTraits$rowsum,  scale2 = 1, name = "SNC")
+  res <- calculate_b_se_tval(get_QR(out$CCAonTraits), y=SNC,
+                             w = stats::weights(out$CCAonTraits, "sites"),  scale2 = 1, name = "SNC")
 
   #print(names(res))
 
@@ -36,7 +36,7 @@ f_trait_axes <- function(out, which_cor = "in model"){
   traits0 <-  stats::model.matrix(~.-1, constrasts = FALSE, data = out$data$dataTraits[, in_model, drop= FALSE])
   #traits0 <-  model.matrix(~. -1, constrasts = FALSE, data = out$data$dataTraits)
   Cormat <- stats::cov2cor(ade4::covwt(cbind( traits0, SNC), w= out$CCAonTraits$rowsum))
-  Cor_Trait_SNC <- Cormat[seq_len(ncol(traits0)),ncol(traits0) + seq_len(out$RDAonEnv$CCA$rank) , drop = FALSE]
+  Cor_Trait_SNC <- Cormat[seq_len(ncol(traits0)),ncol(traits0) + seq_len(Rank_mod(out$RDAonEnv)) , drop = FALSE]
   colnames(Cor_Trait_SNC) <- paste("SNC-ax", seq_len(ncol(Cor_Trait_SNC)), sep= "")
   attr(Cor_Trait_SNC, which = "meaning")<- "inter set correlation, correlation between traits and SNC of axes"
 

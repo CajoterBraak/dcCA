@@ -63,9 +63,10 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){c_env_normed <- x$c_env_normed; species_axes<- x$species_axes}
 
-  if (scaling == "sites")  myconst <- sqrt(nrow(x$RDAonEnv$CCA$u)*x$RDAonEnv$tot.chi) else
-    if (scaling == "species") myconst <- sqrt(nrow(x$RDAonEnv$CCA$u))
-
+  if (scaling == "sites")  myconst <- sqrt(stats::nobs(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
+    if (scaling == "species") myconst <- sqrt(stats::nobs(x$RDAonEnv))
+  # make sure axes chosen by choices are not larger than the rank
+  choices <- choices[choices <= Rank_mod(x)]
   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
 
     sol <- list()
@@ -170,8 +171,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
      group <- rep(names(group), group)
      sol <- do.call(rbind, sol)
      label <- rownames(sol)
-     cw <- vegan::weights(x$CCAonTraits, "sites") # weights(x) can fail with na.action=na.exclude
-     rw <- vegan::weights(x$RDAonEnv, "sites")
+     cw <- stats::weights(x$CCAonTraits, "sites") # weights(x) can fail with na.action=na.exclude
+     rw <- stats::weights(x$RDAonEnv, "sites")
      w <- rep(NA, nrow(sol))
      if (any(weighted <- group == "sites"))
        w[weighted] <- rw

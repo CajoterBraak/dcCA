@@ -59,7 +59,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
 
   if (!"species_axes"%in%names(x)){
     site_axes <- f_env_axes(x)
-    c_env_normed <- site_axes$c_traits_normed
+    c_env_normed <- site_axes$c_env_normed
     species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){
     c_env_normed <- x$c_env_normed; species_axes<- x$species_axes; site_axes<- x$site_axes
@@ -97,6 +97,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
    if ( "centroids" %in%take){
      sol$centroids  <- vegan::scores(x$RDAonEnv, display = c("cn"), scaling = scaling,
                                        choices = choices, const = myconst)
+     if(!is.null(sol$centroids))
      attr(sol$centroids, which = "meaning") <- "category means of the ordination axes  (constraints sites)"
    }
 

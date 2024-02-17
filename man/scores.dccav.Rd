@@ -103,6 +103,10 @@ mod3B <- dc_CA_vegan(formulaEnv = ~A1+Moist+Use+Manure+Condition(Mag),
                     verbose = TRUE)
 all.equal(mod3,mod3B) # TRUE
 
+mod_scores <- scores(mod3, display = "all", tidy = TRUE)
+names(mod_scores)
+levels(mod_scores$score)
+
 # All statistics and scores have been checked against the results with "focus on Case distances" (=Sites)
 # in Canoco 5.15 (ter Braak & Smilauer, 1918).
 

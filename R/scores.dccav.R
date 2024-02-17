@@ -89,9 +89,9 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
       "(and the covariates, so as to make the ordination axes orthogonal to the covariates)")
     }
    if ( "biplot" %in%take){
-     sol$biplot  <- vegan::scores(x$RDAonEnv, display = c("lc"), scaling = scaling,
+     sol$biplot  <- vegan::scores(x$RDAonEnv, display = c("bp"), scaling = scaling,
                                    choices = choices, const = myconst)
-     attr(sol$biplot, which = "meaning") <- "todo"
+     attr(sol$biplot, which = "meaning") <- "biplot scores of environmental variables"
    }
 
    if ( "centroids" %in%take){

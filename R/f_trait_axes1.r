@@ -18,7 +18,7 @@ f_trait_axes <- function(out, which_cor = "in model"){
 
   if (!is.null(out$CCAonTraits$pCCA)){  # orthogalize with respect to any covariate
     SNC <- SNC - calculate_b_se_tval(get_QR(out$CCAonTraits, model= "pCCA"), y=SNC,
-                                     w = out$weights$columns,  scale2 = 0, name = "SNC", fitted_only = TRUE)
+                                     w = stats::weights(out$CCAonTraits, "sites"),  scale2 = 0, name = "SNC", fitted_only = TRUE)
   }
 
   res <- calculate_b_se_tval(get_QR(out$CCAonTraits), y=SNC,

@@ -107,6 +107,10 @@ mod_scores <- scores(mod3, display = "all", tidy = TRUE)
 names(mod_scores)
 levels(mod_scores$score)
 
+mod_scores <- scores(mod3, display = "all")
+str(mod_scores)
+
+
 # All statistics and scores have been checked against the results with "focus on Case distances" (=Sites)
 # in Canoco 5.15 (ter Braak & Smilauer, 1918).
 

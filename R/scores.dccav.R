@@ -65,8 +65,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     c_env_normed <- x$c_env_normed; species_axes<- x$species_axes; site_axes<- x$site_axes
     }
 
-  if (scaling == "sites")  myconst <- sqrt(stats::nobs(x$RDAonEnv)*x$RDAonEnv$tot.chi) else
-    if (scaling == "species") myconst <- sqrt(stats::nobs(x$RDAonEnv))
+  if (scaling == "sites")  myconst <- sqrt(x$Nobs*x$RDAonEnv$tot.chi) else
+    if (scaling == "species") myconst <- sqrt(x$Nobs)
   # make sure axes chosen by choices are not larger than the rank
   choices <- choices[choices <= Rank_mod(x)]
   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
@@ -174,8 +174,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
      group <- rep(names(group), group)
      sol <- do.call(rbind, sol)
      label <- rownames(sol)
-     cw <- stats::weights(x$CCAonTraits, "sites") # weights(x) can fail with na.action=na.exclude
-     rw <- stats::weights(x$RDAonEnv, "sites")
+     cw <- x$weights$columns
+     rw <- x$weights$rows
      w <- rep(NA, nrow(sol))
      if (any(weighted <- group == "sites"))
        w[weighted] <- rw

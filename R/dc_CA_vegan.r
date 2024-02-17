@@ -66,6 +66,9 @@
 #' \item{formalaTraits}{the argument \code{formulaTraits}. }
 #' \item{data}{a list of \code{Y} (response data after removing empty rows and columns and after closure)
 #' and \code{dataEnv} and \code{dataTraits}.}
+#' \item{weights}{a list of unit-sum weights of row and columns.
+#' The names of the list are \code{c("row","columns")}, in that order.}
+#' \item{Nobs}{number of sites (rows).}
 #' \item{RDAonEnv}{a \code{\link[vegan]{cca.object}} from the \code{\link[vegan]{rda}} analysis
 #' of the column scores of the \code{cca}, which are the CWMs of orthonormalized traits,
 #' using formula \code{formulaEnv}. }
@@ -173,6 +176,7 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
 
     Abun_frac <- sweep(response, 1, STATS = TotR, FUN = '/')
     TotRfrac <- rowSums(Abun_frac)
+    TotC <- colSums(Abun_frac)
     tY <- t(Abun_frac)
     formulaTraits <- change_reponse(formulaTraits, "tY")
     environment(formulaTraits)<- environment()
@@ -180,11 +184,12 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     data= list(Y = Abun_frac, dataEnv = dataEnv, dataTraits = dataTraits)
     out1 <- list(CCAonTraits = step1,
                  formulaTraits= formulaTraits,
-                 data = list(Y = Abun_frac, dataEnv = dataEnv, dataTraits = dataTraits)
+                 data = list(Y = Abun_frac, dataEnv = dataEnv, dataTraits = dataTraits),
+                 colweights = TotC/sum(TotC)
     )
   } else {
     step1 <- dc_CA_vegan_object$CCAonTraits
-    out1 <- dc_CA_vegan_object[c("CCAonTraits", "formulaTraits","data")]
+    out1 <- dc_CA_vegan_object[c("CCAonTraits", "formulaTraits","data", "colweights")]
   }
   n <- nrow(out1$data$Y)
   CWMs_orthonormal_traits <- vegan::scores(step1, display= "species",
@@ -196,9 +201,11 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
 
 
 
-  out <- c(out1, list(RDAonEnv = step2,
+  out <- c(out1[-4], list(RDAonEnv = step2,
                       formulaEnv = formulaEnv,
-                      eigenvalues =  vegan::eigenvals(step2, model = "constrained")
+                      eigenvalues =  vegan::eigenvals(step2, model = "constrained"),
+                      weights = list(rows = rep(1/n, n),columns = out1$colweights),
+                      Nobs = n
                       )
   )
   class(out) <- c("dccav", "list")

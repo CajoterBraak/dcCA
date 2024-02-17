@@ -2,7 +2,7 @@ Package: dcCA
 Type: Package
 Title: Double Constrained Correspondence Analysis (dc-CA) For
         Trait-Environment Analysis in Ecology
-Version: 0.9.8
+Version: 0.9.9
 Authors@R: person(given ="Cajo J.F", family = "ter Braak", email="cajo.terbraak@wur.nl", 
    role=c("aut","cre"), comment=c(ORCID="0000-0002-0414-8745"))
 Maintainer: Cajo J.F. ter Braak <cajo.terbraak@wur.nl>
@@ -29,8 +29,8 @@ Depends: R (>= 3.5.0)
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: stats, vegan, ade4, ggplot2, gridExtra
+Imports: stats, vegan, ggplot2, gridExtra
 RoxygenNote: 7.3.0
 NeedsCompilation: no
-Packaged: 2024-02-17 11:30:50 UTC; braak008
+Packaged: 2024-02-17 14:15:31 UTC; braak008
 Author: Cajo J.F ter Braak [aut, cre] (<https://orcid.org/0000-0002-0414-8745>)

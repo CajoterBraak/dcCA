@@ -47,6 +47,9 @@ of the transpose of the closed \code{response} using formula \code{formulaTraits
 \item{formalaTraits}{the argument \code{formulaTraits}. }
 \item{data}{a list of \code{Y} (response data after removing empty rows and columns and after closure)
 and \code{dataEnv} and \code{dataTraits}.}
+\item{weights}{a list of unit-sum weights of row and columns.
+The names of the list are \code{c("row","columns")}, in that order.}
+\item{Nobs}{number of sites (rows).}
 \item{RDAonEnv}{a \code{\link[vegan]{cca.object}} from the \code{\link[vegan]{rda}} analysis
 of the column scores of the \code{cca}, which are the CWMs of orthonormalized traits,
 using formula \code{formulaEnv}. }
@@ -191,6 +194,10 @@ all.equal(mod3,mod3B) # TRUE
 mod_scores <- scores(mod3, display = "all", tidy = TRUE)
 names(mod_scores)
 levels(mod_scores$score)
+
+mod_scores <- scores(mod3, display = "all")
+str(mod_scores)
+
 
 # All statistics and scores have been checked against the results with "focus on Case distances" (=Sites)
 # in Canoco 5.15 (ter Braak & Smilauer, 1918).

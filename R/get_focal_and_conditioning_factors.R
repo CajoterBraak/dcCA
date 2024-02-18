@@ -58,7 +58,10 @@ get_focal_and_conditioning_factors <- function(object){
     # there may be numeric variables in focal_nams (e.g. if condition is a factor but numeric in treatment)
       # delete those
     # factors are names(object$terminfo$xlev)
-      focal_nams <- focal_nams[focal_nams %in% names(object$terminfo$xlev)]
+    #  focal_nams <- focal_nams[focal_nams %in% names(object$terminfo$xlev)]
+      focal_nams <- focal_nams[
+        focal_nams %in% rownames(attr(stats::terms(object), which = "factors"))
+        ]
     }else {
       # unusual case:
       focal_nams <- interaction

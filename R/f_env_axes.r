@@ -22,10 +22,10 @@ f_env_axes <- function(out, which_cor = "in model"){
 
   # correlations of the dataEnv with the CWMs wrt the  axes
   if (which_cor == "in model"){
-    in_model <- colnames(out$data$dataEnv)%in% rownames(attr(stats::terms(out$RDAonEnv), which = "factors"))
+    #in_model <- colnames(out$data$dataEnv)%in% rownames(attr(stats::terms(out$RDAonEnv), which = "factors"))
+     in_model <- get_focal_and_conditioning_factors(out$RDAonEnv)$`focal factor`
     } else in_model = which_cor
   env0 <-  stats::model.matrix(~.-1, constrasts = FALSE, data = out$data$dataEnv[, in_model, drop= FALSE])
-
   Cor_Env_CWM <- wcor(env0, CWM, w = out$weights$rows)
   colnames(Cor_Env_CWM) <- paste("CWM-ax", seq_len(ncol(Cor_Env_CWM)), sep= "")
   attr(Cor_Env_CWM, which = "meaning")<- "inter set correlation, correlation between environmental variables and CWM of axes"

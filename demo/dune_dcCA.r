@@ -11,7 +11,7 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
 
-
+set.seed(123)
 # community-level permutation test
 anova(mod$RDAonEnv) # all option of anova.cca are available!
 # a species-level permuation test requires an dedicated new function
@@ -19,6 +19,7 @@ anova(mod$RDAonEnv) # all option of anova.cca are available!
 
 mod_scores <- scores(mod, display = "all")
 names(mod_scores)
+str(mod_scores)
 
 mod_scores <- scores(mod, display = "all", tidy = TRUE)
 names(mod_scores)
@@ -48,12 +49,21 @@ mod3B <- dc_CA_vegan(formulaEnv = ~A1+Moist+Use+Manure+Condition(Mag),
                     verbose = TRUE)
 all.equal(mod3,mod3B) # TRUE
 
+mod_scores <- scores(mod3, display = "all")
+str(mod_scores)
+mod_scores$biplot
+mod_scores$biplot_traits
+mod_scores$centroids_traits
+
+
+
+
 mod_scores <- scores(mod3, display = "all", tidy = TRUE)
 names(mod_scores)
 levels(mod_scores$score)
 
-mod_scores <- scores(mod3, display = "all")
-str(mod_scores)
+
+
 
 
 # All statistics and scores have been checked against the results with "focus on Case distances" (=Sites)

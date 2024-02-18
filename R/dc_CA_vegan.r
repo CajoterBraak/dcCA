@@ -185,11 +185,11 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     out1 <- list(CCAonTraits = step1,
                  formulaTraits= formulaTraits,
                  data = list(Y = Abun_frac, dataEnv = dataEnv, dataTraits = dataTraits),
-                 colweights = TotC/sum(TotC)
+                 weights = list(columns = TotC/sum(TotC))
     )
   } else {
     step1 <- dc_CA_vegan_object$CCAonTraits
-    out1 <- dc_CA_vegan_object[c("CCAonTraits", "formulaTraits","data", "colweights")]
+    out1 <- dc_CA_vegan_object[c("CCAonTraits", "formulaTraits","data", "weights")]
   }
   n <- nrow(out1$data$Y)
   CWMs_orthonormal_traits <- vegan::scores(step1, display= "species",
@@ -204,7 +204,7 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
   out <- c(out1[-4], list(RDAonEnv = step2,
                       formulaEnv = formulaEnv,
                       eigenvalues =  vegan::eigenvals(step2, model = "constrained"),
-                      weights = list(rows = rep(1/n, n),columns = out1$colweights),
+                      weights = list(rows = rep(1/n, n),columns = out1$weights$columns),
                       Nobs = n
                       )
   )

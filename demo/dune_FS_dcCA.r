@@ -20,7 +20,7 @@ consider <- names(dune_trait_env$envir)[c(2:6)]
 test <- TRUE
 cntr <- permute::how(nper= 999)
 p.adjust.method <- "holm"
-
+set.seed(213)
 
 
 names(consider) <- consider

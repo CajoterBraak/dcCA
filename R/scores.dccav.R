@@ -16,7 +16,7 @@
 #' @param choices integer vector of which axes to obtain. Default: all dc-CA axes.
 #' @param display a character vector, one or more of
 #' \code{c("all","species","sites","sp", "wa", "lc","bp", "cor", "reg", "cn",
-#' "lc_traits", "reg_traits", "cor_traits")}.
+#' "lc_traits", "reg_traits", "cor_traits","bp_traits","cn_traits")}.
 #' The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
 #' and remaining ones are similar scores for traits.
 #' @param which_cor character or list of trait and environmental variables names in the data frames
@@ -29,20 +29,23 @@
 #'  See \code{\link[vegan]{scores.cca}}.
 #' @param ...  Other arguments passed to the function (currently ignored).
 #' @details
-#' In current version: no \code{biplot} scores for traits.
-#' In current version: no \code{centroid} scores for traits.
+#' In current version: no \code{biplot_traits} scores; \code{bp_traits} has no effect.
+#' In current version: no \code{centroid_traits} scores;\code{cn_traits} has no effect.
 #' @example demo/dune_dcCA.R
 #' @export
 scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in model", tidy = FALSE,...){
+ #
  scaling = "sites" # currently only a single scaling is available
+ #
  if (!class(x)[1]=="dccav") stop("The first argument must be the result of the function dc_CA_vegan.")
 
- tabula <- c("species", "sites", "constraints", "biplot", "correlation",
-             "regression", "centroids", "constraints_species", "regression_traits", "correlation_traits" )
- names(tabula) <- c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits")
+ tabula <- c("species", "sites", "constraints", "regression", "biplot", "correlation",
+             "centroids", "constraints_species", "regression_traits","biplot_traits" ,
+             "correlation_traits","centroids_traits" )
+ names(tabula) <- c("sp", "wa", "lc", "reg","bp", "cor", "cn","lc_traits", "reg_traits","bp_traits", "cor_traits","cn_traits")
  #print("here is scores.dccav")
  display <- match.arg(display,
-                      c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits", "cor_traits","sites", "species", "all"),
+                      c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits","bp_traits", "cor_traits","centroids_traits","sites", "species", "all"),
                       several.ok = TRUE)
  ## set "all" for tidy scores
  if (tidy)
@@ -98,7 +101,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
      sol$centroids  <- vegan::scores(x$RDAonEnv, display = c("cn"), scaling = scaling,
                                        choices = choices, const = myconst)
      if(!is.null(sol$centroids))
-     attr(sol$centroids, which = "meaning") <- "category means of the ordination axes  (constraints sites)"
+     attr(sol$centroids, which = "meaning") <- "environmental category means of the ordination axes  (constraints sites)"
    }
 
 
@@ -118,6 +121,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
       attr(sol$correlation,  which = "meaning")<-
         "inter set correlation, correlation between environmental variables and the sites scores (CWMs)"
     }
+
+
 
 # Species stats -----------------------------------------------------------
    if ( "species" %in%take) {
@@ -140,6 +145,18 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
       }
       attr(sol$correlation_traits, which = "meaning")<-
         "inter set correlation, correlation between traits and the species scores (SNCs)"
+    }
+
+    if ("biplot_traits"%in% take && scaling =="sites") {
+      sol$biplot_traits <- NULL #sol$correlation_traits
+      # attr(sol$biplot_traits, which = "meaning")<-
+      #   "biplot scores of traits"
+    }
+
+    if ( "centroids_traits" %in%take){
+      sol$centroids_traits  <- NULL
+      if(!is.null(sol$centroids_traits))
+        attr(sol$centroids, which = "meaning") <- "trait category means of the ordination axes  (constraints sites)"
     }
 
    for (nam in names(sol)){

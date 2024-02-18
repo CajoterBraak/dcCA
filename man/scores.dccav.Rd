@@ -20,7 +20,7 @@
 
 \item{display}{a character vector, one or more of
 \code{c("all","species","sites","sp", "wa", "lc","bp", "cor", "reg", "cn",
-"lc_traits", "reg_traits", "cor_traits")}.
+"lc_traits", "reg_traits", "cor_traits","bp_traits","cn_traits")}.
 The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
 and remaining ones are similar scores for traits.}
 
@@ -49,8 +49,8 @@ that the linear combinations of traits (the \emph{constrained} species scores)
 also replace the usual (\emph{unconstrained}) species scores.
 }
 \details{
-In current version: no \code{biplot} scores for traits.
-In current version: no \code{centroid} scores for traits.
+In current version: no \code{biplot_traits} scores; \code{bp_traits} has no effect.
+In current version: no \code{centroid_traits} scores;\code{cn_traits} has no effect.
 }
 \examples{
 

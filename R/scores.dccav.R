@@ -19,32 +19,85 @@
 #' "lc_traits", "reg_traits", "cor_traits","bp_traits","cn_traits")}.
 #' The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
 #' and remaining ones are similar scores for traits.
-#' @param which_cor character or list of trait and environmental variables names in the data frames
-#' for which inter-set correlations must calculated.
+#' @param which_cor character or list of trait and environmental variables names (in this order)
+#' in the data frames for which inter-set correlations must calculated.
 #' Default: a character ("in_model") for all traits and variables in the model,
 #' including collinear variables and levels.
+#' @param scaling numeric (1,2 or 3) or character \code{"sites", "species" or "symmetric"}. Default: "sym".
+#' Either site- (1) or species- (2) related scores are scaled by eigenvalues,
+#' and the other set of scores is left unscaled,
+#' or with 3 both are scaled symmetrically by square root of eigenvalues. Negative values are treated as the
+#' corresponding positive ones by \code{abs(scaling)}. See also
 #' @param tidy Return scores that are compatible with \code{ggplot2}:
 #'  all scores are in a single data.frame, score type is identified by factor variable \code{score},
 #'  the names by variable \code{label}, and species weights (in dc_CA_vegan) are in variable \code{weight}.
 #'  See \code{\link[vegan]{scores.cca}}.
 #' @param ...  Other arguments passed to the function (currently ignored).
-# @details
+#' @details
+#'  An example of which_cor is: \code{which_cor = list(traits= c("SLA"), env = c("acidity","humidity") )}
+#'  The function is modeled after \code{\link[vegan]{scores.cca}}.
 #' @example demo/dune_dcCA.R
+#' @returns A data frame if \code{tidy = TRUE}, a matrix if a single item is asked for and a named list of matrices if more than one item
+#' is asked for. The following names can be included: \code{c("sites",
+#' "constraints_sites", "centroids", "regression", "correlation", "biplot",
+#' "species", "constraints_species", "regression_traits", "correlation_traits",
+#' "biplot_traits", "centroids_traits")}. Each matrix has an attritute \code{"meaning"} explaining its content.
 #' @export
-scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in model", tidy = FALSE,...){
- #
- scaling = "sites" # currently only a single scaling is available
+scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", which_cor = "in model", tidy = FALSE,...){
+ # internal function
+  f_meaning <- function( type_of_scores, scaling, txt){
+
+    if (type_of_scores %in%
+        c("sites", "constraints") )
+      {point_type = "site"; opt_scal <- "sites"}
+    else if (type_of_scores %in%  c("species", "constraints_species") )
+      {point_type = "species"; opt_scal <- "species"}
+    else if (type_of_scores %in% "centroids")
+      {point_type = "environmental category"; opt_scal <- "sites"}
+    else if (type_of_scores %in% "centroids_traits")
+    {point_type = "trait category"; opt_scal <- "species"}
+    else if (type_of_scores %in% c("biplot", "biplot_traits"))
+    {point_type = "arrows"; opt_scal <- scaling}
+
+    txt1 <-   paste(txt," in scaling '", scaling, "' optimal for biplots and inter-", point_type, " distances.", sep = "")
+    txt1b <-  paste(txt," in scaling '", scaling, "' optimal for biplots and, almost so, for inter-", point_type, " distances.", sep = "")
+    txt1c <-  paste(txt," in scaling '", scaling, "' optimal for biplots, but unsuited for inter-", point_type, " distances.", sep = "")
+
+    txt2<-    paste(txt," in scaling '", scaling, "', optimal for biplots displays, suboptimal for display of inter-", point_type, " distances.", sep = "")
+    txt3 <-   paste(txt," in scaling '", scaling, "' optimal for biplot displays, suboptimal for distance interpretation.", sep = "")
+    txt4 <-   paste(txt," in scaling '", scaling, "'.", sep = "")
+
+    if (type_of_scores %in% c("biplot", "biplot_traits")) txt1 <- txt2<- txt3 <-txt4
+
+
+    thres1 <- 1.5 # to be decided upon... What does Canoco 5 suggest?
+    thres2 <- 4
+    ratio_eig <- x$eigenvalues[choices[1]]/x$eigenvalues[choices[2]]
+    if (scaling == "symmetric"){
+      if (sqrt(ratio_eig) < thres1  ) txt3 <- txt1b else if (sqrt(ratio_eig) > thres2) txt3 <- txt1c
+    } else
+      if (ratio_eig < thres1 ) txt2 <- txt1b else if (ratio_eig > thres2) txt2 <- txt1c
+
+
+    if (opt_scal == scaling) txt_out <- txt1
+    else if (scaling == "symmetric") txt_out <- txt3
+    else txt_out <- txt2
+
+    return(txt_out)
+
+  }
  #
  if (!class(x)[1]=="dccav") stop("The first argument must be the result of the function dc_CA_vegan.")
 
- tabula <- c("species", "sites", "constraints", "regression", "biplot", "correlation",
-             "centroids", "constraints_species", "regression_traits","biplot_traits" ,
+ tabula <- c( "sites", "constraints", "regression", "biplot", "correlation",
+         "centroids","species", "constraints_species", "regression_traits","biplot_traits" ,
              "correlation_traits","centroids_traits" )
- names(tabula) <- c("sp", "wa", "lc", "reg","bp", "cor", "cn","lc_traits", "reg_traits","bp_traits", "cor_traits","cn_traits")
+ names(tabula) <- c( "wa", "lc", "reg","bp", "cor", "cn","sp","lc_traits", "reg_traits","bp_traits", "cor_traits","cn_traits")
  #print("here is scores.dccav")
  display <- match.arg(display,
                       c("sp", "wa", "lc","bp", "cor", "reg", "cn","lc_traits", "reg_traits","bp_traits", "cor_traits","cn_traits","sites", "species", "all"),
                       several.ok = TRUE)
+
  ## set "all" for tidy scores
  if (tidy)
    display <- "all"
@@ -65,47 +118,71 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
   } else if ("species_axes"%in%names(x)){
     c_env_normed <- x$c_env_normed; species_axes<- x$species_axes; site_axes<- x$site_axes
     }
-
-  if (scaling == "sites")  myconst <- sqrt(x$Nobs*x$RDAonEnv$tot.chi) else
-    if (scaling == "species") myconst <- sqrt(x$Nobs)
   # make sure axes chosen by choices are not larger than the rank
-  choices <- choices[choices <= Rank_mod(x)]
+  choices <- choices[choices <= length(x$eigenvalues)]
   if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
+
+  if (is.character (scaling) ){
+    scaling <- match.arg(scaling,  c( "sites", "species","symmetric"))
+    if (scaling == "sites") num_scaling <- 1 else if (scaling == "species") num_scaling <- 2 else if (scaling =="symmetric") num_scaling = 3 else stop("scaling type not recognized")
+  } else if (is.numeric(scaling)) {
+      num_scaling <- abs(scaling)
+      scaling <- c("sites","species","symmetric")[num_scaling]
+  } else stop("scaling type not recognized")
+
+  slam <- sqrt(x$eigenvalues[choices])
+  scal <- list(rep(1, length(slam) ), slam, sqrt(slam))[[abs(num_scaling)]]
+  diag_scal_sites   <- diag(1/scal)
+  diag_scal_species <- diag(scal)
+
+
 
     sol <- list()
 
-    if ("sites" %in% take){
-    # sol$sites  <- vegan::scores(x$RDAonEnv, display = c("sites"), scaling = scaling,
-    #                                    choices = choices, const = myconst)
-    sol$sites <- site_axes$site_scores[[1]][,choices, drop = FALSE]
 
-    attr(sol$sites, which = "meaning") <- "CMWs of the trait axes (constraints species) in 'Sites' scaling."
+# scaling for site related scores (incl env) ------------------------------
+
+
+
+    if ( "sites" %in%take){
+      sol$sites <-   site_axes$site_scores[[1]][,choices, drop = FALSE] %*% diag_scal_sites
+      attr(sol$sites, which = "meaning") <-f_meaning("sites", scaling,
+      "CMWs of the trait axes (constraints species)")
     }
+
     if ( "constraints" %in%take){
-    #sol$constraints_sites  <- vegan::scores(x$RDAonEnv, display = c("lc"), scaling = scaling,
-    #                                choices = choices, const = myconst)
-    sol$constraints_sites <- site_axes$site_scores[[2]][,choices, drop = FALSE]
-
-    attr(sol$constraints_sites, which = "meaning") <- c("linear combination of the environmental predictors",
-      "(and the covariates, so as to make the ordination axes orthogonal to the covariates)")
+      sol$constraints_sites <- site_axes$site_scores[[2]][,choices, drop = FALSE] %*% diag_scal_sites
+      attr(sol$constraints_sites, which = "meaning") <- f_meaning("constraints", scaling,
+      paste("linear combination of the environmental predictors",
+        "and the covariates (making the ordination axes orthogonal to the covariates)'", collapse = "")
+      )
     }
 
+    if ( "centroids" %in%take){
 
-   if ( "centroids" %in%take){
-      cn <-  vegan::scores(x$RDAonEnv, display = c("cn"), scaling = scaling,
-                                       choices = choices, const = myconst)
-     if(!is.null(cn)){
-     attr(cn, which = "meaning") <- "environmental category means of the ordination axes  (constraints sites)"
+      if (which_cor == "in model") {
+        in_model <- get_focal_and_conditioning_factors(x$RDAonEnv, factors_only = TRUE)$`focal factor`
+      } else in_model = which_cor
+      dat = x$data$dataEnv[, in_model, drop= FALSE]
+      cn  <- centroids.cca(x$site_axes$site_scores$site_scores_unconstrained,
+                           dat, wt=x$weights$rows)[,choices, drop = FALSE]
 
-     }
-    sol$centroids <- cn
-   }
-
+      if(!is.null(cn)){
+        cn <- cn %*% diag_scal_sites
+        attr(cn, which = "meaning") <- f_meaning("centroids", scaling,
+                                                 "environmental category means of the site scores")
+      }
+      sol$centroids <-  cn
+    }
 
     if ("regression"%in% take) {
-      sol$regression <- c_env_normed[,regchoices]
+
+      regr <- c_env_normed[,choices +3] %*% diag_scal_sites
+      if (tidy)sol$regression <- regr else
+      sol$regression <-cbind(c_env_normed[,1:3], regr)
+
       attr(sol$regression, which = "meaning")<-
-        "mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio"
+        paste("mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio in scaling '",scaling,"'.",sep="")
     }
     if ("correlation"%in% take) {
         if (!is.list(which_cor)){
@@ -122,11 +199,10 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     if ( "biplot" %in%take){
       e_rcor <- x$site_axes$correlation[,choices, drop = FALSE]
       R <- sqrt(x$site_axes$R2_env[choices])
-      sing <- sqrt(x$eigenvalues[choices])
-      sol$biplot <- e_rcor%*% diag(sing/R)
+      sol$biplot <- e_rcor%*% diag(slam/R) %*% diag_scal_sites
       colnames(sol$biplot)<- paste("dcCA", choices, sep = "")
-      attr(sol$biplot, which = "meaning") <-
-  "biplot scores of environmental variables for display with biplot-traits for fourth-corner correlations"
+      attr(sol$biplot, which = "meaning") <- f_meaning("biplot", scaling,
+      "biplot scores of environmental variables for display with biplot-traits for fourth-corner correlations")
     }
 
 
@@ -136,15 +212,27 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
 
 # Species stats -----------------------------------------------------------
    if ( "species" %in%take) {
-     sol$species <- species_axes$species_scores[[1]][,choices, drop = FALSE]
-     attr(sol$species, which = "meaning")<- "SNC on the ordination axes (constraints sites), scaled to unit weighted sum of squares"
+     sol$species <- species_axes$species_scores[[1]][,choices, drop = FALSE] %*% diag_scal_species
+     attr(sol$species, which = "meaning")<-f_meaning("species", scaling,
+     "SNC on the environmental axes (constraints sites)")
+
    }
    if ( "constraints_species" %in%take){
-     sol$constraints_species <- species_axes$species_scores[[2]][,choices, drop = FALSE]
-     attr(sol$constraints_species, which = "meaning")<- c("linear combination of the traits",
-        "(and the trait covariates, so as to make the ordination axes orthogonal to the trait covariates)")
+     sol$constraints_species <- species_axes$species_scores[[2]][,choices, drop = FALSE] %*% diag_scal_species
+     attr(sol$constraints_species, which = "meaning")<- f_meaning("constraints_species", scaling,
+       paste("linear combination of the traits",
+      "and the trait covariates (making the ordination axes orthogonal to the covariates)'", collapse = "")
+     )
+
    }
-    if ("regression_traits"%in% take)sol$regression_traits <- species_axes$c_traits_normed[,regchoices]
+    if ("regression_traits"%in% take){
+      regr <- species_axes$c_traits_normed[,choices + 3] %*% diag_scal_species
+      if (tidy) sol$regression_traits <-  regr else
+      sol$regression_traits <- cbind(species_axes$c_traits_normed[, 1:3] , regr)
+      attr(sol$regression_traits, which = "meaning")<-
+        paste("mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio in scaling '",scaling,"'.",sep="")
+
+    }
     if ("correlation_traits"%in% take) {
       if (!is.list(which_cor)){
         sol$correlation_traits <- species_axes$correlation[,choices, drop = FALSE]
@@ -160,26 +248,27 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
     if ( "biplot_traits" %in%take){
       t_rcor <- x$species_axes$correlation[,choices, drop = FALSE]
       R <- sqrt(x$species_axes$R2_traits[choices])
-      sol$biplot_traits <- t_rcor %*% diag(1/R)
-
+      sol$biplot_traits <- t_rcor %*% diag(diag(diag_scal_species)/R)
       colnames(sol$biplot_traits)<- paste("dcCA", choices, sep = "")
-      attr(sol$biplot_traits, which = "meaning") <-
-        "biplot scores of traits for display with biplot scores for fourth-corner correlations"
+      attr(sol$biplot_traits, which = "meaning") <-f_meaning("biplot", scaling,
+        "biplot scores of traits for display with biplot scores for fourth-corner correlation")
     }
 
     if ( "centroids_traits" %in%take){
 
       if (which_cor == "in model") {
         # in_model <- colnames(x$data$dataTraits)%in% rownames(attr(stats::terms(x$CCAonTraits), which = "factors"))
-        in_model <- get_focal_and_conditioning_factors(x$CCAonTraits)$`focal factor`
+        in_model <- get_focal_and_conditioning_factors(x$CCAonTraits, factors_only = TRUE)$`focal factor`
       } else in_model = which_cor
       dat = x$data$dataTraits[, in_model, drop= FALSE]
       cn  <- centroids.cca(x$species_axes$species_scores$species_scores_unconstrained,
-                      dat, wt=x$weights$columns)[,choices, drop = FALSE]
-      sol$centroids_traits_lc <-  centroids.cca(x$species_axes$species_scores$lc_traits_scores,
-                                            dat, wt=x$weights$columns)[,choices, drop = FALSE]
+                      dat, wt=x$weights$columns)[,choices, drop = FALSE] %*% diag_scal_species
+      # sol$centroids_traits_lc <-  centroids.cca(x$species_axes$species_scores$lc_traits_scores,
+      #                                       dat, wt=x$weights$columns)[,choices, drop = FALSE] %*% diag_scal_species
       if(!is.null(cn))
-        attr(cn, which = "meaning") <- "trait category means of the ordination axes  (constraints sites)"
+        attr(cn, which = "meaning") <-  f_meaning("centroids_traits", scaling,
+                                                  "trait category means of the species scores")
+
       sol$centroids_traits <-  cn
     }
 
@@ -233,6 +322,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), which_cor = "in m
      sol$label <- label
      sol$weight <- w
      names(sol)[seq_along(choices)] <- paste("dcCA", choices, sep = "")
+     attr(sol, which = "scaling") <- scaling
    }
 
 

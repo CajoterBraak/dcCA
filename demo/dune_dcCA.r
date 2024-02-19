@@ -14,12 +14,25 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 set.seed(123)
 # community-level permutation test
 anova(mod$RDAonEnv) # all option of anova.cca are available!
-# a species-level permuation test requires an dedicated new function
+# a species-level permutation test requires an dedicated new function
 # this is not yet available in this version
 
-mod_scores <- scores(mod, display = "all")
+mod_scores <- scores(mod, display = c("all"), scaling = "sites")
+
 names(mod_scores)
 str(mod_scores)
+head(mod_scores$sites)
+attr(mod_scores$sites, which = "meaning")
+mod_scores$regression
+mod_scores$biplot
+mod_scores$centroids
+# species related scores
+head(mod_scores$species)
+attr(mod_scores$species, which = "meaning")
+mod_scores$regression_traits
+mod_scores$biplot_traits
+mod_scores$centroids_traits
+
 
 mod_scores <- scores(mod, display = "all", tidy = TRUE)
 names(mod_scores)
@@ -49,23 +62,36 @@ mod3B <- dc_CA_vegan(formulaEnv = ~A1+Moist+Use+Manure+Condition(Mag),
                     verbose = TRUE)
 all.equal(mod3,mod3B) # TRUE
 
-mod_scores <- scores(mod3, display = "all")
+mod_scores <- scores(mod3, display = "all", scaling = "symmetric")
 str(mod_scores)
-mod_scores$biplot
+
+
+head(mod_scores$sites)
+attr(mod_scores$sites, which = "meaning")
+mod_scores$regression
+
+mod_scores[["biplot"]]
+#  mod_scores$centroids
+# #gives the mod_scores$centroids_traits
+# as mod_scores[["centroids"]] is NULL
+mod_scores[["centroids"]]
+# species related scores
+head(mod_scores$species)
+attr(mod_scores$species, which = "meaning")
+mod_scores$regression_traits
 mod_scores$biplot_traits
 mod_scores$centroids_traits
-
 
 
 
 mod_scores <- scores(mod3, display = "all", tidy = TRUE)
 names(mod_scores)
 levels(mod_scores$score)
+str(mod_scores)
 
 
 
 
-
-# All statistics and scores have been checked against the results with "focus on Case distances" (=Sites)
-# in Canoco 5.15 (ter Braak & Smilauer, 1918).
+# All statistics and scores have been checked against the results
+# in Canoco 5.15 (ter Braak & Smilauer, 1918) for all three types of scaling.
 

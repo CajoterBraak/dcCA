@@ -1,6 +1,7 @@
 f_inertia <- function(object){
   # function f_inertia uses vegan 2.6-4 internal structure
-
+  # object: a dccav object, results of dc_CA_vegan
+  # value:  a matrix (currently with 1 column) with in first column the inertias
   inertia <- cbind(c(total=           object$CCAonTraits$tot.chi,
                      conditionT=      object$CCAonTraits$pCCA$tot.chi,
                      traits_explain=  object$CCAonTraits$CCA$tot.chi,

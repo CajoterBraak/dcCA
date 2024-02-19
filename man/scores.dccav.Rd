@@ -8,6 +8,7 @@
   x,
   choices = c(1, 2),
   display = c("all"),
+  scaling = "sym",
   which_cor = "in model",
   tidy = FALSE,
   ...
@@ -24,8 +25,14 @@
 The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
 and remaining ones are similar scores for traits.}
 
-\item{which_cor}{character or list of trait and environmental variables names in the data frames
-for which inter-set correlations must calculated.
+\item{scaling}{numeric (1,2 or 3) or character \code{"sites", "species" or "symmetric"}. Default: "sym".
+Either site- (1) or species- (2) related scores are scaled by eigenvalues,
+and the other set of scores is left unscaled,
+or with 3 both are scaled symmetrically by square root of eigenvalues. Negative values are treated as the
+corresponding positive ones by \code{abs(scaling)}. See also}
+
+\item{which_cor}{character or list of trait and environmental variables names (in this order)
+in the data frames for which inter-set correlations must calculated.
 Default: a character ("in_model") for all traits and variables in the model,
 including collinear variables and levels.}
 
@@ -35,6 +42,13 @@ the names by variable \code{label}, and species weights (in dc_CA_vegan) are in 
 See \code{\link[vegan]{scores.cca}}.}
 
 \item{...}{Other arguments passed to the function (currently ignored).}
+}
+\value{
+A data frame if \code{tidy = TRUE}, a matrix if a single item is asked for and a named list of matrices if more than one item
+is asked for. The following names can be included: \code{c("sites",
+"constraints_sites", "centroids", "regression", "correlation", "biplot",
+"species", "constraints_species", "regression_traits", "correlation_traits",
+"biplot_traits", "centroids_traits")}. Each matrix has an attritute \code{"meaning"} explaining its content.
 }
 \description{
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
@@ -47,6 +61,10 @@ The differences are, for CCA, that the linear combinations of environmental vari
 replace the usual (\emph{unconstrained}) site scores, and for dc-CA,
 that the linear combinations of traits (the \emph{constrained} species scores)
 also replace the usual (\emph{unconstrained}) species scores.
+}
+\details{
+An example of which_cor is: \code{which_cor = list(traits= c("SLA"), env = c("acidity","humidity") )}
+ The function is modeled after \code{\link[vegan]{scores.cca}}.
 }
 \examples{
 
@@ -65,12 +83,25 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 set.seed(123)
 # community-level permutation test
 anova(mod$RDAonEnv) # all option of anova.cca are available!
-# a species-level permuation test requires an dedicated new function
+# a species-level permutation test requires an dedicated new function
 # this is not yet available in this version
 
-mod_scores <- scores(mod, display = "all")
+mod_scores <- scores(mod, display = c("all"), scaling = "sites")
+
 names(mod_scores)
 str(mod_scores)
+head(mod_scores$sites)
+attr(mod_scores$sites, which = "meaning")
+mod_scores$regression
+mod_scores$biplot
+mod_scores$centroids
+# species related scores
+head(mod_scores$species)
+attr(mod_scores$species, which = "meaning")
+mod_scores$regression_traits
+mod_scores$biplot_traits
+mod_scores$centroids_traits
+
 
 mod_scores <- scores(mod, display = "all", tidy = TRUE)
 names(mod_scores)
@@ -100,24 +131,37 @@ mod3B <- dc_CA_vegan(formulaEnv = ~A1+Moist+Use+Manure+Condition(Mag),
                     verbose = TRUE)
 all.equal(mod3,mod3B) # TRUE
 
-mod_scores <- scores(mod3, display = "all")
+mod_scores <- scores(mod3, display = "all", scaling = "symmetric")
 str(mod_scores)
-mod_scores$biplot
+
+
+head(mod_scores$sites)
+attr(mod_scores$sites, which = "meaning")
+mod_scores$regression
+
+mod_scores[["biplot"]]
+#  mod_scores$centroids
+# #gives the mod_scores$centroids_traits
+# as mod_scores[["centroids"]] is NULL
+mod_scores[["centroids"]]
+# species related scores
+head(mod_scores$species)
+attr(mod_scores$species, which = "meaning")
+mod_scores$regression_traits
 mod_scores$biplot_traits
 mod_scores$centroids_traits
-
 
 
 
 mod_scores <- scores(mod3, display = "all", tidy = TRUE)
 names(mod_scores)
 levels(mod_scores$score)
+str(mod_scores)
 
 
 
 
-
-# All statistics and scores have been checked against the results with "focus on Case distances" (=Sites)
-# in Canoco 5.15 (ter Braak & Smilauer, 1918).
+# All statistics and scores have been checked against the results
+# in Canoco 5.15 (ter Braak & Smilauer, 1918) for all three types of scaling.
 
 }

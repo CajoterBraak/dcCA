@@ -32,7 +32,7 @@ get_focal_and_conditioning_factors <- function(object, factors_only = TRUE){
   if (is.na(idC)) { Condi_nams <- NULL} else {
     # get names of the Condition
     condi <- tl[idC]
-    condi <- attr(terms(as.formula(paste("~",substr(condi, 11, nchar(condi)-1), sep = ""))), "term.labels")
+    condi <- attr(stats::terms(stats::as.formula(paste("~",substr(condi, 11, nchar(condi)-1), sep = ""))), "term.labels")
     tl2 <- strsplit(condi, split = ":", fixed = TRUE)
     id_interactions <- which (sapply(tl2, length) >1)
     if (length(id_interactions)) Condi_nams <- unlist(tl2[-id_interactions]) else Condi_nams <- unlist(tl2)

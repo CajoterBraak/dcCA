@@ -120,7 +120,6 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
     }
   # make sure axes chosen by choices are not larger than the rank
   choices <- choices[choices <= length(x$eigenvalues)]
-  if (tidy) regchoices <-  choices+3 else regchoices <- c(1:3, choices+3) # coefs only (tidy) or with mean,sd,vif
 
   if (is.character (scaling) ){
     scaling <- match.arg(scaling,  c( "sites", "species","symmetric"))
@@ -161,7 +160,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
     if ( "centroids" %in%take){
 
       if (which_cor == "in model") {
-        in_model <- get_focal_and_conditioning_factors(x$RDAonEnv, factors_only = TRUE)$`focal factor`
+        in_model <- get_focal_and_conditioning_factors(x$RDAonEnv, factors_only = FALSE)$`focal factor`
       } else in_model = which_cor
       dat = x$data$dataEnv[, in_model, drop= FALSE]
       cn  <- centroids.cca(x$site_axes$site_scores$site_scores_unconstrained,
@@ -258,7 +257,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
 
       if (which_cor == "in model") {
         # in_model <- colnames(x$data$dataTraits)%in% rownames(attr(stats::terms(x$CCAonTraits), which = "factors"))
-        in_model <- get_focal_and_conditioning_factors(x$CCAonTraits, factors_only = TRUE)$`focal factor`
+        in_model <- get_focal_and_conditioning_factors(x$CCAonTraits, factors_only = FALSE)$`focal factor`
       } else in_model = which_cor
       dat = x$data$dataTraits[, in_model, drop= FALSE]
       cn  <- centroids.cca(x$species_axes$species_scores$species_scores_unconstrained,

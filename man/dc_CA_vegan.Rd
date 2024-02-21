@@ -99,6 +99,8 @@ there are three more items (in this version).
  }
 
 }
+All scores in the \code{dccav} object
+are in scaling \code{"sites"} (1): the scaling with \emph{Focus on Case distances} .
 }
 \description{
 \code{dcCA-vegan} performs double constained correspondence analysis (dc-CA) by
@@ -123,7 +125,7 @@ by their row sums), the subsequent algorithm follows the two-step algorithm of t
 and consits of two steps. First, the transpose of the \code{response} is regressed on to the traits
 (the column predictors) using \code{\link[vegan]{cca}}
 with \code{formulaTraits}.
-The column scores of this analysis (in scaling 2) are community weigthed means (CWM) of the
+The column scores of this analysis (in scaling 1) are community weigthed means (CWM) of the
 orthonormalized traits.
 These are then regressed on the environmental (row) predictors using \code{\link[vegan]{rda}} with
 with \code{formulaEnv}.
@@ -137,8 +139,7 @@ two-fold: dc-CA is the efficient summary of CWM-based regression analyses, which
 the weights implied by the \code{response} after closure.
 
 The statistics and scores in the example \code{dune_dcCA.r},
- have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918)
- for the scaling with \emph{Focus on Case distances} (\code{scaling = "sites"}).
+ have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918).
 }
 \examples{
 

@@ -23,6 +23,39 @@ standardize_w <- function(X,w = rep(1/nrow(X),nrow(X))){
 }
 
 
+# unweighted least-squares (LS) functions from EES 2022-------------------------------------------------
+
+unweighted_lm_pq_fit <- function(Y, X){
+  # multivariate multiple regression of Y on X
+  # using qr decomposition
+  # value Y_fit
+  Y_fit <- qr.fitted( qr(X),Y)
+  return(Y_fit)
+}
+
+unweighted_lm_Orthnorm_fit <- function(Y, X=numeric(0)){
+  # multivariate multiple regression of Y on orthonormal X
+  # value Y_residual
+  beta <-  t(X) %*% Y
+  Yfit <- X %*% beta
+  return(Yfit)
+}
+
+unweighted_lm_Orthnorm <- function(Y, X=numeric(0)){
+  # multivariate multiple regression of Y on orthonormal X
+  # value Y_residual
+  beta <-  t(X) %*% Y
+  Y <- Y - X %*% beta
+  return(Y)
+}
+
+
+SVD <- function(Y){
+  svdY <- svd(Y)
+  Ustar <- svdY$u
+  id <- which(svdY$d > 1.e-6)
+  return(Ustar[,id, drop = FALSE])
+}
 # from vegan 2.6-4 --------------------------------------------------------
 
 centroids.cca <-  function(x, mf, wt)

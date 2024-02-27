@@ -21,15 +21,21 @@
 #'  explained by the environmental predictors (without covariates).)
 #'  The default is quicker computationally as it avoid computation of an svd of permuted data sets.
 #' @details
-#' The algorithm is two-step. The first step is a \code{\link[vegan]{cca}} of the \code{response} on to the environment using
-#' \code{formulaEnv}. The second is a weighted redundancy analysis of the species-niche centroids along
-#' the environmental gradients on to the traits using \code{formulaTraits} using a
+#' In \code{\link{anova_species}}, the first step extracts the species-niche centroids (SNC)
+#' with respect to all dc-CA ordination axes
+#' from an existing dc-CA analysis. These SNCs (more precisely, a rotated version thereof)
+#' could have been obtained from a \code{\link[vegan]{cca}}
+#' of the abundance data with the environmental variables as predictors, but this is computationally slower,
+#' of course, than just extracting the unconstrained species scores from an existing dc-CA. The second step,
+#' applies a weighted redundancy analysis of these SNCs with the traits as predictors. The second step is thus
+#' a species-level analysis, but the final results (eigenvalues/ordination axes) are identical to those of the
+#' analyses steps in \code{\link{dc_CA_vegan}}.The second step uses
 #' published R-code for weighted redundancy analysis, which includes statistical significance
 #' tests using residual predictor permutation (ter Braak, 2022).
 #'
 #' @return
-#'  A list with two elements with names \code{table},\code{eig}.
-#'  The \code{table} is as from \code{\link[vegan]{anova.cca}} and \code{eig}  gives the dc-CA eigenvalues,
+#'  A list with two elements with names \code{table} and \code{eig}.
+#'  The \code{table} is as from \code{\link[vegan]{anova.cca}} and \code{eig} gives the dc-CA eigenvalues,
 #'  This output can be used for scripting forward selection of traits,
 #'  similar to the forward selection of environmental
 #'  variables in the demo \code{dune_FS_dcCA.r}.

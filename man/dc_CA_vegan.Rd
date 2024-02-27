@@ -106,7 +106,8 @@ are in scaling \code{"sites"} (1): the scaling with \emph{Focus on Case distance
 \code{dcCA-vegan} performs double constained correspondence analysis (dc-CA) by
 the two-step algorithm of ter Braak et al. (2018). This algorithm
 combines and extends community- (sample-) and species-level analyses.
-The first step uses \code{\link[vegan]{cca}} to regress the transposed abundance data on to the traits
+The first step uses \code{\link[vegan]{cca}} (Oksanen et al. 2022)
+to regress the transposed abundance data on to the traits
 and \code{\link[vegan]{rda}} to regress the community-weighted means (CWMs)
 of the ortho-normalized traits on to the environmental predictors.
 In this \code{vegan}-based version, the abundance data are divided by the sample total,
@@ -264,6 +265,10 @@ http://rdcu.be/ETPh
 ter Braak C.J.F. and  P. Šmilauer  (2018). Canoco reference manual
 and user's guide: software for ordination (version 5.1x).
 Microcomputer Power, Ithaca, USA, 536 pp.
+
+Oksanen, J., et al. (2022)
+vegan: Community Ecology Package. R package version 2.6-4.
+http://CRAN.R-project.org/package=vegan.
 }
 \seealso{
 \code{\link{scores.dccav}}, \code{\link{print.dccav}} and \code{\link{anova.dccav}}

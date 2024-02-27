@@ -30,8 +30,8 @@
 #' tests using residual predictor permutation (ter Braak, 2022).
 #'
 #' @return
-#'  A list with two elements with names \code{table} and \code{eig}
-#'  with a table as from \code{\link[vegan]{anova.cca}} and the dc-CA eigenvalues, respectively.
+#'  A list with two elements with names \code{table} and \code{eig}.
+#'  The \code{table} is as from \code{\link[vegan]{anova.cca}} and \code{eig} gives the dc-CA eigenvalues,
 #' @references
 #' ter Braak, C.J.F. & te Beest, D.E. 2022. Testing environmental effects
 #' on taxonomic composition with canonical correspondence analysis:

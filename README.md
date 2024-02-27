@@ -5,13 +5,20 @@
 
  dcCA analyzes multi-trait multi-environment ecological data by
 double constrained correspondence analysis (ter Braak et al. 2018) 
-using \code{vegan}, \code{ade4} and native R code.
+using \code{vegan} and native R code. It has a \code{formula} interface
+for the trait- (column-) and environment- (row-) models,
+which allows to assess, for example, the importance
+of trait interactions in shaping ecological communities.
 Throughout the two step algorithm of ter Braak et al. (2018) is used. This algorithm
 combines and extends community- (sample-) and species-level analyses, i.e.
-the usual community weigthed means (CWM)-based regression analysis and the
+the usual community weighted means (CWM)-based regression analysis and the
 species-level analysis of species-niche centroids (SNC)-based regression analysis.
-The two steps use \code{\link[vegan]{cca}} to regress the abundance data on to the traits
-and \code{\link[vegan]{rda}} to regress the CWM of the orthonormalized traits on to the environemtal predictors.
+The CWM regressions are specified with an environmental formula 
+and the SNC regressions are specified with a trait formula. dcCA finds 
+the environmental and trait gradients that optimize these regressions.
+The first step of the algorithm uses \code{\link[vegan]{cca}} 
+to regress the (transposed) abundance data on to the traits 
+and the second step uses \code{\link[vegan]{rda}} to regress the CWMs of the orthonormalized traits on to the environmental predictors.
 The abundance data are divided by the sample total
 (i.e. 'closed') in the vegan-based version. This
 has the advantage that this multivariate analysis corresponds with an unweighted (multi-trait)

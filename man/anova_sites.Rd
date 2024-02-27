@@ -24,8 +24,8 @@ the number of permutations required (default 999), or
 a permutation matrix where each row gives the permuted indices.}
 }
 \value{
-A list with two elements with names \code{table} and \code{eig}
- with a table as from \code{\link[vegan]{anova.cca}} and the dc-CA eigenvalues, respectively.
+A list with two elements with names \code{table} and \code{eig}.
+ The \code{table} is as from \code{\link[vegan]{anova.cca}} and \code{eig} gives the dc-CA eigenvalues,
 }
 \description{
 \code{anova_sites} performs a Community-level permutation test of dc-CA.

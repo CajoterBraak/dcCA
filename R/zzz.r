@@ -2,25 +2,28 @@
 #'
 #' @description
 #' The \code{dcCA} package analyzes multi-trait multi-environment ecological data by
-#' double constrained correspondence analysis (ter Braak et al. 2018) using \code{vegan}, \code{ade4} and native R code.
+#' double constrained correspondence analysis (ter Braak et al. 2018) using \code{vegan} and native R code.
 #' Throughout the two step algorithm of ter Braak et al. (2018) is used. This algorithm
 #' combines and extends community- (sample-) and species-level analyses, i.e.
-#' the usual community weigthed means (CWM)-based regression analysis and the
+#' the usual community weighted means (CWM)-based regression analysis and the
 #' species-level analysis of species-niche centroids (SNC)-based regression analysis.
 #' The two steps use \code{\link[vegan]{cca}} to regress the abundance data on to the traits
-#' and \code{\link[vegan]{rda}} to regress the CWM of the orthonormalized traits on to the environemtal predictors.
+#' and \code{\link[vegan]{rda}} to regress the CWMs of the orthonormalized traits on to the environmental predictors.
 #' The abundance data are divided by the sample total
 #' (i.e. 'closed') in the vegan-based version. This
 #' has the advantage that this multivariate analysis corresponds with an unweighted (multi-trait)
 #' community-level analysis, instead of being weighted.
-#' The current vegan-based analysis is efficient for sample-based permutation tests but slow or
-#' -not yet available- for species-based permutation tests.
+#' The current vegan-based analysis is efficient for community-level (site-based) permutation tests
+#' but a factor 20 or so slower for species-level permutation tests.
 #' The technical reason for the closure, is that \code{vegan} \code{\link[vegan]{rda}} cannot do a weighted analysis.
 #'
 #' Warning: The \code{dcCA} package was built from \code{vegan} version 2.6-4 and uses some of the
 #' internal structure of the \code{vegan} \code{\link[vegan]{cca.object}}
 #' in the not-exported functions \code{f_inertia} and \code{get_QR}
-#' in the source code file \code{functions_using_cca_object_internals.r} .
+#' in the source code file \code{functions_using_cca_object_internals.r}.
+#'
+#' The main user-functions are \code{\link{dc_CA_vegan}}, \code{\link{scores.dccav}},
+#' \code{\link{print.dccav}} and \code{\link{anova.dccav}}.
 #'
 #'
 #' @references

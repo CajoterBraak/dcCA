@@ -64,7 +64,7 @@ condition in \code{formulaTraits}).
 This is the maximum that the row predictors could explain in dc-CA
 (the sum of the following two items is thus less than this value).
 \item conditionE: the trait-constrained inertia explained by the condition in \code{formulaEnv}.
-\item constraintsE: the trait-constrained inertia explained by the predictors (without the row covariates).
+\item constraintsTE: the trait-constrained inertia explained by the predictors (without the row covariates).
 }
  }
 }
@@ -114,8 +114,8 @@ i.e. 'closed' in the terminology of compositional data analysis (CoDa). This
 has the advantage that the results of a dc-CA correspond with unweighted (multi-trait)
 community-level analyses, instead of corresponding to a weighted analysis (dc-CA weighs the
 rows by the sample total, which is 1 after closure).
-The current vegan-based analysis is efficient for sample-based permutation tests but slow or
--not yet available- for species-based permutation tests.
+The current vegan-based analysis is efficient for community-level (site-based) permutation tests
+but a factor 20 or so slower for species-level permutation tests.
 }
 \details{
 Empty (all zero) rows and columns in \code{response} are removed from the \code{response} and the corresponding
@@ -156,10 +156,24 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    verbose = TRUE)
 
 set.seed(123)
+# overall test
 # community-level permutation test
-anova(mod$RDAonEnv) # all option of anova.cca are available!
-# a species-level permutation test requires an dedicated new function
-# this is not yet available in this version
+anova(mod$RDAonEnv) # all optiond of anova.cca are available!
+# a species-level permutation test required an dedicated new function
+anova_species(mod) #
+
+# by axis test
+p_sites   <- anova(mod$RDAonEnv, by = "axis")
+
+
+p_species <- anova_species(mod, by="axis")
+p_sites1 <- p_sites$`Pr(>F)`[-nrow(p_sites)]
+id <- p_sites1 > p_species$`Pr(>F)`
+if (sum(id)==0)  Pr_max <- p_species$`Pr(>F)` else Pr_max <- c(p_sites1[id], p_species$`Pr(>F)`[-id])
+Pr_max <- cummax(Pr_max)
+names(Pr_max) <- paste("dcCA", seq_along(Pr_max), sep = "")
+# max test
+Pr_max
 
 mod_scores <- scores(mod, display = c("all"), scaling = "sites")
 
@@ -252,5 +266,5 @@ and user's guide: software for ordination (version 5.1x).
 Microcomputer Power, Ithaca, USA, 536 pp.
 }
 \seealso{
-\code{\link{scores.dccav}} and \code{\link{print.dccav}}
+\code{\link{scores.dccav}}, \code{\link{print.dccav}} and \code{\link{anova.dccav}}
 }

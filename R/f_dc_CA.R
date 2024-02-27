@@ -1,3 +1,16 @@
+change_reponse  <- function(f, response){ # used in dc_CA_vegan
+  # response : character
+
+  ft <- as.character(f)
+  if (!is.character(response)) stop("response must be character") else if (length(response)>1) stop("response must be of length one")
+  # ft2 <- paste(response, ft[1], ft[-c(1,2)], collapse = " ")
+  id <- which(ft%in% "~")
+  if (!length(id)) stop("specify a formula with a '~' ") else
+  if (length(ft)>3) warning("as.character(formula) has more than three element, only last it element is included")
+    ft2 <- paste0(response," ", ft[id], ft[length(ft)], collapse = " ")
+  f2 <- stats::as.formula(ft2)
+  return(f2)
+}
 calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, name = "SNC", fitted_only = FALSE) {
   # specify  X_or_qr_decomp_of_X is an (yet unweigthed to-be weigthed) matrix or
   # the qr_decomp of the weigthed X matrix

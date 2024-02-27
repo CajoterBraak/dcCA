@@ -12,8 +12,8 @@
 #' has the advantage that the results of a dc-CA correspond with unweighted (multi-trait)
 #' community-level analyses, instead of corresponding to a weighted analysis (dc-CA weighs the
 #' rows by the sample total, which is 1 after closure).
-#' The current vegan-based analysis is efficient for sample-based permutation tests but slow or
-#' -not yet available- for species-based permutation tests.
+#' The current vegan-based analysis is efficient for community-level (site-based) permutation tests
+#' but a factor 20 or so slower for species-level permutation tests.
 #'
 #' @param formulaEnv formula or one-sided formula for the rows (samples) with row predictors in \code{dataEnv}.
 #' When two-sided, the left hand side of the formula is not used. Specify row covariates (if any ) by adding \code{+ Condition(covariate-formula)}
@@ -82,7 +82,7 @@
 #' This is the maximum that the row predictors could explain in dc-CA
 #' (the sum of the following two items is thus less than this value).
 #' \item conditionE: the trait-constrained inertia explained by the condition in \code{formulaEnv}.
-#' \item constraintsE: the trait-constrained inertia explained by the predictors (without the row covariates).
+#' \item constraintsTE: the trait-constrained inertia explained by the predictors (without the row covariates).
 #' }
 #'  }
 #' }
@@ -131,7 +131,7 @@
 #' ter Braak C.J.F. and  P. Šmilauer  (2018). Canoco reference manual
 #' and user's guide: software for ordination (version 5.1x).
 #' Microcomputer Power, Ithaca, USA, 536 pp.
-#' @seealso \code{\link{scores.dccav}} and \code{\link{print.dccav}}
+#' @seealso \code{\link{scores.dccav}}, \code{\link{print.dccav}} and \code{\link{anova.dccav}}
 #' @example demo/dune_dcCA.R
 #' @export
 
@@ -141,20 +141,10 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
   # runs that modify the formula for samples (step2: RDAonEnv) only
   # The step1 (CCAonTraits and the data and formulaTraits) are taken from dc_CA_vegan_object into the new result.
   # If set, formulaTraits, response, dataEnv, dataTraits are not used at all and have no efffect on the result
-  change_reponse  <- function(f, response){ # used in dc_CA_vegan
-    # response : character
-    ft <- as.character(f)
-    if (!is.character(response)) stop("response must be character") else if (length(response)>1) stop("response must be of length one")
-    # ft2 <- paste(response, ft[1], ft[-c(1,2)], collapse = " ")
-    if (ft[1] == "~")  ft2 <- paste0(response, ft[1], ft[-1], collapse = " ") else
-      ft2 <- paste0(response, ft[1], ft[-c(1,2)], collapse = " ")
-
-    f2 <- stats::as.formula(ft2)
-    return(f2)
-  }
 
   if (is.null(dc_CA_vegan_object)){
     #  check and amend: make sure there are no empty rows or columns -----------------------------------------------------------------------
+
     if (is.null(dataTraits)) stop("dataTraits must be specified in dc_CA_vegan")
     if (!is.matrix(response)) response <- as.matrix(response) else stop("response (matrix or df) must specified")
     id0 <-1
@@ -175,7 +165,7 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     # end of check -----------------------------------------------------------------------
     # close the data (divide by the row total, to get strictly compositional data) -----------------------------------------------------------------------
 
-
+    call <- match.call()
     Abun_frac <- sweep(response, 1, STATS = TotR, FUN = '/')
     TotRfrac <- rowSums(Abun_frac)
     TotC <- colSums(Abun_frac)
@@ -187,12 +177,14 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     out1 <- list(CCAonTraits = step1,
                  formulaTraits= formulaTraits,
                  data = list(Y = Abun_frac, dataEnv = dataEnv, dataTraits = dataTraits),
+                 call = call,
                  weights = list(columns = TotC/sum(TotC))
     )
   } else {
     step1 <- dc_CA_vegan_object$CCAonTraits
-    out1 <- dc_CA_vegan_object[c("CCAonTraits", "formulaTraits","data", "weights")]
+    out1 <- dc_CA_vegan_object[c("CCAonTraits", "formulaTraits","data", "weights","call")]
   }
+
   n <- nrow(out1$data$Y)
   CWMs_orthonormal_traits <- vegan::scores(step1, display= "species",
                 scaling = "species", choices = 1:Rank_mod(step1)) * sqrt((n-1)/n)
@@ -203,7 +195,7 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
 
 
 
-  out <- c(out1[-4], list(RDAonEnv = step2,
+  out <- c(out1[-5], list(RDAonEnv = step2,
                       formulaEnv = formulaEnv,
                       eigenvalues =  vegan::eigenvals(step2, model = "constrained"),
                       weights = list(rows = rep(1/n, n),columns = out1$weights$columns),

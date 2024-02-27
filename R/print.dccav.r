@@ -26,7 +26,7 @@ print.dccav <- function(x, ...){
   c_e <- x$c_env_normed[,c(choices, 4 + Rank_mod(x$RDAonEnv))]
   c_t <- x$c_traits_normed[,c(choices, 4 + Rank_mod(x$RDAonEnv))]
 
-  cat("mean, sd, VIF and canonical coefficients with their optimistic [!] t-values\n")
+  cat("mean, sd, VIF and canonical coefficients with their optimistic [!] t-values:\n")
   print (round(c_e,4))
 
   print (round(c_t,4))

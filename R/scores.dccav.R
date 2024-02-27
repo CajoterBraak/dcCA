@@ -261,14 +261,17 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
       } else in_model = which_cor
       dat = x$data$dataTraits[, in_model, drop= FALSE]
       cn  <- centroids.cca(x$species_axes$species_scores$species_scores_unconstrained,
-                      dat, wt=x$weights$columns)[,choices, drop = FALSE] %*% diag_scal_species
+                      dat, wt=x$weights$columns)[,choices, drop = FALSE]
+
       # sol$centroids_traits_lc <-  centroids.cca(x$species_axes$species_scores$lc_traits_scores,
       #                                       dat, wt=x$weights$columns)[,choices, drop = FALSE] %*% diag_scal_species
-      if(!is.null(cn))
+      if(!is.null(cn)){
+        cn <- cn %*% diag_scal_species
         attr(cn, which = "meaning") <-  f_meaning("centroids_traits", scaling,
                                                   "trait category means of the species scores")
+      }
 
-      sol$centroids_traits <-  cn
+         sol$centroids_traits <-  cn
     }
 
    for (nam in names(sol)){

@@ -6,12 +6,12 @@ f_inertia <- function(object){
                      conditionT=      object$CCAonTraits$pCCA$tot.chi,
                      traits_explain=  object$CCAonTraits$CCA$tot.chi,
                      conditionE =     object$RDAonEnv$pCCA$tot.chi,
-                     constraintsE =   object$RDAonEnv$CCA$tot.chi ))
+                     constraintsTE =   object$RDAonEnv$CCA$tot.chi ))
   colnames(inertia)<- "weigthed variance"
   expla <- c("total inertia","inertia of the trait condition", "trait-constrained inertia",
              "trait-constrained inertia explained by the condition in formulaEnv",
              "trait-constrained inertia explained by the predictors in formulaEnv")
-  names(expla) <- c("total","conditionT","traits_explain","conditionE","constraintsE")
+  names(expla) <- c("total","conditionT","traits_explain","conditionE","constraintsTE")
   attr(inertia, which = "meaning") <-  matrix( expla[rownames(inertia)], ncol=1,
                                                dimnames = list(rownames(inertia),"meaning"))
   return(inertia)

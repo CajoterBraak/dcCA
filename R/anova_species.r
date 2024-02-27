@@ -56,8 +56,7 @@
 
 
 anova_species <- function(object, permutations = 999, by = NULL ){
-# object dcca object; permat  a matrix of permutations. if set overrules permuations.
-#anova.dccav <- function(object, permutations = how(nperm=999), permat = NULL, ...){
+# object dcca object
 #
   if (is.null(by)) by <- "omnibus"
   if (is.na(pmatch(by, c("axis","omnibus")) )) stop(" set argument 'by' to 'axis' or 'NULL'")
@@ -65,7 +64,7 @@ anova_species <- function(object, permutations = 999, by = NULL ){
   N <- nrow(object$data$dataTraits) #
   if (is.numeric(permutations)|| "how" %in% class(permutations) || is.matrix(permutations) ){
     if (is.numeric(permutations) && !is.matrix(permutations) ) permutations <- permute::how(nperm=permutations[1])
-    else if (is.matrix(permutations) && !ncol(permat)== N)
+    else if (is.matrix(permutations) && !ncol(permutations)== N)
       stop(paste("Error:: each row of permutations should have ", N, " elements", sep =""))
 
   } else stop("argument permutations should be integer, matrix or specified  by permute::how(). ")
@@ -94,14 +93,14 @@ if(is.null(qrZ)) Zw <- matrix(sWn) else  Zw<-  cbind(sWn, SVD(qr.X(qrZ)))
 
   # residual predictor permutation
   out_tes <- list()
-  out_tes[[1]]  <- randperm_eX0sqrtw(Yw,Xw, Zw, sWn = sWn, nrepet = nrepet, permutations= permutations, by = by, return= "all")
+  out_tes[[1]]  <- randperm_eX0sqrtw(Yw,Xw, Zw, sWn = sWn,  permutations= permutations, by = by, return= "all")
 
   if( by == "axis") {
 
   while (out_tes[[1]]$rank > length(out_tes) ) {
     Zw <- cbind(Zw,out_tes[[length(out_tes)]]$EigVector1)
     out_tes[[length(out_tes)+1]] <- randperm_eX0sqrtw(Yw,Xw, Zw,
-                                  sWn = sWn, nrepet = nrepet, permutations= permutations, by = by, return = "all")
+                                  sWn = sWn, permutations= permutations, by = by, return = "all")
   }
   }
 # what the env. variables explain of the trait-structured variation
@@ -158,7 +157,7 @@ dummysvd <- function(Y){list(d = 1,
 
 #for permutation.type = X = X1
 randperm_eX0sqrtw <- function(Y,X, Z = matrix(1, nrow = nrow(Y),ncol =1), by= NULL,
-                              sWn = rep(1,nrow(Y)), nrepet = 999, permutations= permute::how(nperm=999),
+                              sWn = rep(1,nrow(Y)), permutations= permute::how(nperm=999),
                               return = "pval"){
 
   # for getting ordinary X-permutation, i.e. ordinary Collins-Dekker (residualized predictor permutation),
@@ -253,35 +252,6 @@ randperm_eX0sqrtw <- function(Y,X, Z = matrix(1, nrow = nrow(Y),ncol =1), by= NU
   }
 
 return(res)
-}
-
-
-test_axes_RDA <- function(Y,X, Z = NULL, w = rep(1,nrow(Y)), permutation.type = "X", nrepet = 999, perm.mat= NULL, silent = FALSE){
-  mysvd <- svd
-  # perm.mat is a list for 4 perm.mat matrices
-  if (is.null(perm.mat)){perm.mat <- list(a=NULL, b= NULL, c=NULL, d= NULL)}
-  if (!is.list(perm.mat)) errorCondition("perm.mat in test_axes_RDA must be a list of matrices")
-  out_tes2 <- list(ssX= NULL, ssGz =NULL, F0=NULL,pval= NULL)
-  out_tes3 <- list(ssX= NULL, ssGz =NULL, F0=NULL,pval= NULL)
-  out_tes4 <- list(ssX= NULL, ssGz =NULL, F0=NULL,pval= NULL)
-  out_tes1 <- randperm_RDA(Y,X, Z, w=w, nrepet = nrow(perm.mat[[1]]), permutation.type = permutation.type, perm.mat= perm.mat[[1]])
-  if (out_tes1$rank >= 2) out_tes2 <- randperm_RDA(Y,X, Z = cbind(Z,out_tes1$RDA_ax1), w=w, nrepet = nrow(perm.mat[[2]]), permutation.type = permutation.type, perm.mat= perm.mat[[2]])
-  if (out_tes1$rank >= 3) out_tes3 <- randperm_RDA(Y,X, Z = cbind(Z,out_tes1$RDA_ax1,out_tes2$RDA_ax1), w=w, nrepet = nrow(perm.mat[[3]]), permutation.type = permutation.type, perm.mat= perm.mat[[3]])
-  if (out_tes1$rank >= 4) out_tes4 <- randperm_RDA(Y,X, Z = cbind(Z,out_tes1$RDA_ax1,out_tes2$RDA_ax1,out_tes3$RDA_ax1), w=w, nrepet = nrow(perm.mat[[4]]), permutation.type = permutation.type, perm.mat= perm.mat[[4]])
-  ExplConstax <- c(out_tes1$ssX[1]/out_tes1$ssGz,out_tes2$ssX[1]/out_tes1$ssGz,
-                   out_tes3$ssX[1]/out_tes1$ssGz,out_tes4$ssX[1]/out_tes1$ssGz)
-  F_axes <- c(out_tes1$F0[1],out_tes2$F0[1],out_tes3$F0[1],out_tes4$F0[1])
-  p_val_axes1 <- cummax(c(out_tes1$pval[1],out_tes2$pval[1],out_tes3$pval[1],out_tes4$pval[1]))
-  p_val_axes2 <- cummax(c(out_tes1$pval[2],out_tes2$pval[2],out_tes3$pval[2],out_tes4$pval[2]))
-  eig <- out_tes1$eig
-  axsig_RDA <- rbind(ExplConstax,F_axes,p_val_axes1,p_val_axes2)
-  rownames(axsig_RDA) <- c("Explained by constrained axis","Pseudo-F value", "P value eig1", "P value trace")
-
-  colnames(axsig_RDA) <- seq_along(F_axes)
-  attr(axsig_RDA, "method") <- out_tes1$method
-  attr(axsig_RDA, "permutation.type") <- permutation.type
-  if (!silent) print(round (axsig_RDA,3))
-  result <- list(summary = axsig_RDA, ax1 =out_tes1, ax2= out_tes2, ax3= out_tes3, ax4= out_tes4, eig = eig)
 }
 
 # unweighted least-squares (OLS) functions -------------------------------------------------

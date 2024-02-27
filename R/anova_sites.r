@@ -49,16 +49,15 @@
 
 
 anova_sites <- function(object, permutations =999, by = NULL){
-# object dcca object; permat  a matrix of permutations. if set overrules permuations.
-#anova.dccav <- function(object, permutations = how(nperm=999), permat = NULL, ...){
+# object dcca object;
 #
   if (is.null(by)) by <- "omnibus"
   if (is.na(pmatch(by, c("axis","omnibus")) )) stop(" set argument 'by' to 'axis' or 'NULL'")
 
   N <- nrow(object$data$dataEnv) #
-  if (is.numeric(permutations)|| "how" %in% class(permutations) || is.matrix(permutation) ){
+  if (is.numeric(permutations)|| "how" %in% class(permutations) || is.matrix(permutations) ){
       if (is.numeric(permutations) && !is.matrix(permutations) ) permutations <- permute::how(nperm=permutations[1])
-      else if (is.matrix(permutations) && !ncol(permat)== N)
+      else if (is.matrix(permutations) && !ncol(permutations)== N)
         stop(paste("Error:: each row of permutations should have ", N, " elements", sep =""))
 
   } else stop("argument permutations should be integer, matrix or specified  by permute::how(). ")
@@ -86,14 +85,14 @@ if(is.null(qrZ)) Zw <- matrix(sWn) else  Zw<-  cbind(sWn, SVD(qr.X(qrZ)))
 
   # residual predictor permutation
   out_tes <- list()
-  out_tes[[1]]  <- randperm_eX0sqrtw(Yw,Xw, Zw, sWn = sWn, nrepet = nrepet, permutations= permutations, by = by, return = "all")
+  out_tes[[1]]  <- randperm_eX0sqrtw(Yw,Xw, Zw, sWn = sWn, permutations= permutations, by = by, return = "all")
 
   if( by == "axis") {
 
   while (out_tes[[1]]$rank > length(out_tes) ) {
     Zw <- cbind(Zw,out_tes[[length(out_tes)]]$EigVector1)
     out_tes[[length(out_tes)+1]] <- randperm_eX0sqrtw(Yw,Xw, Zw,
-                                  sWn = sWn, nrepet = nrepet, permutations= permutations, by = by, return = "all")
+                                  sWn = sWn, permutations= permutations, by = by, return = "all")
   }
   }
 # what the env. variables explain of the trait-structured variation

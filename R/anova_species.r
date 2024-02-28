@@ -130,7 +130,7 @@ if(is.null(qrZ)) Zw <- matrix(sWn) else  Zw<-  cbind(sWn, SVD(qr.X(qrZ)))
   head <- paste0("Species-level permutation test using dc-CA\n",
                  object1,
                  "Residualized predictor permutation\n",
-                 vegan:::howHead(attr(out_tes[[1]],"control") ))
+                 howHead(attr(out_tes[[1]],"control") ))
 
   f_species <-structure(axsig_dcCA_species, heading = head, #Random.seed = seed,
                         control = attr(out_tes[[1]],"control"),
@@ -290,3 +290,58 @@ SVD <- function(Y){
 }
 
 # end OLS versions -------------------------------------------------
+
+
+# code adapted from vegan 2.6-4 ---------------------------------------------------
+
+### Make a compact summary of permutations. This copies Gav Simpson's
+### permute:::print.how, but only displays non-default choices in how().
+`howHead` <- function(x, ...)
+{
+  ## print nothing is this not 'how'
+  if (is.null(x) || !inherits(x, "how"))
+    return()
+  ## collect header
+  head <- NULL
+  ## blocks
+  if (!is.null(getBlocks(x)))
+    head <- paste0(head, paste("Blocks: ", x$blocks.name, "\n"))
+  ## plots
+  plotStr <- permute::getStrata(x, which = "plots")
+  if (!is.null(plotStr)) {
+    plots <- permute::getPlots(x)
+    ptype <- permute::getType(x, which = "plots")
+    head <- paste0(head, paste0("Plots: ", plots$plots.name, ", "))
+    head <- paste0(head, paste("plot permutation:", ptype))
+    if(permute::getMirror(x, which = "plots"))
+      head <- paste(head, "mirrored")
+    if (isTRUE(all.equal(ptype, "grid"))) {
+      nr <- permute::getRow(x, which = "plots")
+      nc <- permute::getCol(x, which = "plots")
+      head <- paste0(head, sprintf(ngettext(nr, " %d row", " %d rows"),
+                                   nr))
+      head <- paste0(head, sprintf(ngettext(nc, " %d column",
+                                            " %d columns"), nc))
+    }
+    head <- paste0(head, "\n")
+  }
+  ## the fine level (within plots if any)
+  type <- permute::getType(x, which = "within")
+  head <- paste0(head, "Permutation: ", type)
+  if (isTRUE(type %in% c("series", "grid"))) {
+    if(permute::getMirror(x, which = "within"))
+      head <- paste(head, "mirrored")
+    if(getConstant(x))
+      head <- paste0(head, " constant permutation within each Plot")
+  }
+  if (isTRUE(all.equal(type, "grid"))) {
+    nr <- permute::getRow(x, which = "within")
+    nc <- permute::getCol(x, which = "within")
+    head <- paste0(head, sprintf(ngettext(nr, " %d row", " %d rows"),
+                                 nr))
+    head <- paste0(head, sprintf(ngettext(nc, " %d column",
+                                          " %d columns"), nc))
+  }
+  paste0(head, "\nNumber of permutations: ", getNperm(x),  "\n")
+}
+

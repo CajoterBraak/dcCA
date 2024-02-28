@@ -120,7 +120,7 @@ if(is.null(qrZ)) Zw <- matrix(sWn) else  Zw<-  cbind(sWn, SVD(qr.X(qrZ)))
   head <- paste0("Community-level permutation test using dc-CA\n",
                  object1,
                  "Residualized predictor permutation\n",
-                 vegan:::howHead(attr(out_tes[[1]],"control") ))
+                 howHead(attr(out_tes[[1]],"control") ))
 
   f_sites <-structure(axsig_dcCA_sites, heading = head, #Random.seed = seed,
                         control = attr(out_tes[[1]],"control"),

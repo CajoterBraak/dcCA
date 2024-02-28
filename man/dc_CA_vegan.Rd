@@ -11,7 +11,7 @@ dc_CA_vegan(
   dataEnv,
   dataTraits = NULL,
   dc_CA_vegan_object = NULL,
-  verbose = FALSE
+  verbose = TRUE
 )
 }
 \arguments{
@@ -37,7 +37,7 @@ same formula for the columns (\code{formulaTraits}), \code{dataTraits} and \code
 with a new formula for the rows. If set, the data of the previous run is used and the result of its first step
 is taken for the new analysis.}
 
-\item{verbose}{logical for printing a simple summary (default: FALSE)}
+\item{verbose}{logical for printing a simple summary (default: TRUE)}
 }
 \value{
 A list of \code{class} \code{dccav}; that is a list with elements

@@ -65,6 +65,8 @@ anova.dccav <- function(object, permutations = 999, by = NULL){
 # object dcca object; permat  a matrix of permutations. if set overrules permuations.
 #anova.dccav <- function(object, permutations = how(nperm=999), permat = NULL, ...){
 #
+  if (!"dccav" %in% class(object)) stop("The first argument must be of class 'dccav', the result of the function dc_CA_vegan.")
+
   if (is.null(by)) by <- "omnibus"
   if (is.na(pmatch(by, c("axis","omnibus")) )) stop(" set argument 'by' to 'axis' or 'NULL'")
 
@@ -81,7 +83,7 @@ anova.dccav <- function(object, permutations = 999, by = NULL){
     head <- paste0("Species-level permutation test using dc-CA\n",
                    object1,
                    "Residualized predictor permutation\n",
-                   vegan:::howHead(attr(f_species0,"control") ))
+                   howHead(attr(f_species0,"control") ))
 
     f_species <-structure(table, heading = head, #Random.seed = seed,
                           control = f_species0$table$how,
@@ -95,7 +97,7 @@ anova.dccav <- function(object, permutations = 999, by = NULL){
     rownames(f_sites) <- paste("dcCA", seq_len(nrow(f_sites)), sep ="")
     attr(f_sites,"heading") <- paste0("Community-level equi-weigthed permutation test using vegan::rda\n",
                                       object1,
-                                      vegan:::howHead(attr(f_sites,"control")))
+                                      howHead(attr(f_sites,"control")))
     names(f_sites)[2]<- "ChiSquare"
 
 
@@ -105,13 +107,13 @@ anova.dccav <- function(object, permutations = 999, by = NULL){
                                       "\nTaken from the community-level test:\n",
                                       "Residualized response permutation using vegan::rda\n",
                                       "which performs well in this equi-weight case.\n",
-                                      vegan:::howHead(attr(f_sites,"control")))
+                                      howHead(attr(f_sites,"control")))
     } else if (all(f_sites$`Pr(>F)` <= f_species$`Pr(>F)`, na.rm=TRUE)) {
       f_max <- f_species
       attr(f_max,"heading") <- paste0("Max test combining the community- and species- level tests \n", object1,
                                       "\nTaken from the species-level test:\n",
                                       "Residualized predictor permutation\n",
-                                      vegan:::howHead(attr(f_species,"control")))
+                                      howHead(attr(f_species,"control")))
     } else { # mix
       id <- f_sites$`Pr(>F)` > f_species$`Pr(>F)`
       id <- id[-length(id)]

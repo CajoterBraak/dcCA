@@ -32,7 +32,7 @@
 #' same formula for the columns (\code{formulaTraits}), \code{dataTraits} and \code{response} are used
 #' with a new formula for the rows. If set, the data of the previous run is used and the result of its first step
 #' is taken for the new analysis.
-#' @param verbose logical for printing a simple summary (default: FALSE)
+#' @param verbose logical for printing a simple summary (default: TRUE)
 #
 #' @details
 #' Empty (all zero) rows and columns in \code{response} are removed from the \code{response} and the corresponding
@@ -147,7 +147,7 @@
 #' @example demo/dune_dcCA.R
 #' @export
 
-dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dataEnv, dataTraits= NULL, dc_CA_vegan_object  = NULL, verbose = FALSE) {
+dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dataEnv, dataTraits= NULL, dc_CA_vegan_object  = NULL, verbose = TRUE) {
   # response matrix or data frame, dataEnv and dataTraits data frames in which formualaE and formulaT are evaluated
   #dc_CA_vegan_object = result (value) of a previous run, can be used to save computing time for
   # runs that modify the formula for samples (step2: RDAonEnv) only

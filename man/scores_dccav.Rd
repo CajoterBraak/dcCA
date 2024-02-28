@@ -51,6 +51,8 @@ is asked for. The following names can be included: \code{c("sites",
 "biplot_traits", "centroids_traits")}. Each matrix has an attritute \code{"meaning"} explaining its content.
 }
 \description{
+This function replicates \code{\link{scores.dccav}} so as to overcome S3 overloading problems
+of the \code{scores} function, in the library \code{dcCA} redefined from library \code{vegan}.
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
 in particular \code{\link[vegan]{scores.cca}}, with the additional results such
 as regression coefficients and linear combinations of traits \code{('regr_traits','lc_traits')}

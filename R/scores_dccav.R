@@ -90,7 +90,7 @@ scores_dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
 
   }
  #
- if (!"dccav" %in% class(x)) stop("The first argument must be the result of the function dc_CA_vegan.")
+ #if (!"dccav" %in% class(x)) stop("The first argument must be the result of the function dc_CA_vegan.")
 
  tabula <- c( "sites", "constraints", "regression", "biplot", "correlation",
          "centroids","species", "constraints_species", "regression_traits","biplot_traits" ,

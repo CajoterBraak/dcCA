@@ -120,7 +120,9 @@ but a factor 20 or so slower for species-level permutation tests.
 }
 \details{
 Empty (all zero) rows and columns in \code{response} are removed from the \code{response} and the corresponding
-rows from \code{dataEnv} and \code{dataTraits}.
+rows from \code{dataEnv} and \code{dataTraits}. Subsequently, any columns with missing values
+are removed from  \code{dataEnv} and \code{dataTraits}. It gives an error (object 'name_of_variable' not found),
+if variables with missing entries are specified in \code{formulaEnv} and \code{formulaTraits}.
 After 'closure' (division of the values in \code{response}
 by their row sums), the subsequent algorithm follows the two-step algorithm of ter Braak et al. (2018).
 and consits of two steps. First, the transpose of the \code{response} is regressed on to the traits
@@ -141,6 +143,10 @@ the weights implied by the \code{response} after closure.
 
 The statistics and scores in the example \code{dune_dcCA.r},
  have been checked against the results in Canoco 5.15 (ter Braak & Smilauer, 1918).
+
+In the current implementation, \code{formulaEnv} and \code{formulaTraits} should
+contain variable names as is, \emph{i.e.} transformations of variables in the formulas gives
+an error ('undefined columns selected') when the \code{\link{scores}} function is applied.
 }
 \examples{
 

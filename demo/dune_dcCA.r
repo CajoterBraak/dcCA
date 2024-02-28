@@ -14,22 +14,11 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 set.seed(123)
 # overall test
 # community-level permutation test
-anova(mod$RDAonEnv) # all optiond of anova.cca are available!
-# a species-level permutation test required an dedicated new function
-anova_species(mod) #
-
+anova(mod$RDAonEnv) # all options of anova.cca are available!
 # by axis test
 p_sites   <- anova(mod$RDAonEnv, by = "axis")
-
-
-p_species <- anova_species(mod, by="axis")
-p_sites1 <- p_sites$`Pr(>F)`[-nrow(p_sites)]
-id <- p_sites1 > p_species$`Pr(>F)`
-if (sum(id)==0)  Pr_max <- p_species$`Pr(>F)` else Pr_max <- c(p_sites1[id], p_species$`Pr(>F)`[-id])
-Pr_max <- cummax(Pr_max)
-names(Pr_max) <- paste("dcCA", seq_along(Pr_max), sep = "")
-# max test
-Pr_max
+# a species-level permutation test required an dedicated new function
+# anova_species(mod) # see dune_test.r
 
 mod_scores <- scores(mod, display = c("all"), scaling = "sites")
 

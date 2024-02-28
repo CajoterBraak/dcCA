@@ -229,10 +229,10 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
                       Nobs = n
                       )
   )
-  class(out) <- c("dccav", "list")
+
 
   out$inertia <- try(f_inertia(out))
-
+  class(out) <- c("dccav", "list")
 
 
   if (verbose) out<-print.dccav(out)

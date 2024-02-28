@@ -72,6 +72,7 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
 
     thres1 <- 1.5 # to be decided upon... What does Canoco 5 suggest?
     thres2 <- 4
+    if (length(choices)>1){
     ratio_eig <- x$eigenvalues[choices[1]]/x$eigenvalues[choices[2]]
     if (scaling == "symmetric"){
       if (sqrt(ratio_eig) < thres1  ) txt3 <- txt1b else if (sqrt(ratio_eig) > thres2) txt3 <- txt1c
@@ -82,12 +83,14 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
     if (opt_scal == scaling) txt_out <- txt1
     else if (scaling == "symmetric") txt_out <- txt3
     else txt_out <- txt2
+    } else txt_out <-    txt
+
 
     return(txt_out)
 
   }
  #
- if (!class(x)[1]=="dccav") stop("The first argument must be the result of the function dc_CA_vegan.")
+ if (!"dccav" %in% class(x)) stop("The first argument must be the result of the function dc_CA_vegan.")
 
  tabula <- c( "sites", "constraints", "regression", "biplot", "correlation",
          "centroids","species", "constraints_species", "regression_traits","biplot_traits" ,
@@ -131,8 +134,14 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
 
   slam <- sqrt(x$eigenvalues[choices])
   scal <- list(rep(1, length(slam) ), slam, sqrt(slam))[[abs(num_scaling)]]
-  diag_scal_sites   <- diag(1/scal)
-  diag_scal_species <- diag(scal)
+  if (length(scal)>1){
+    diag_scal_sites   <- diag(1/scal)
+    diag_scal_species <- diag(scal)
+  }
+  else {
+    diag_scal_sites   <- matrix(1/scal)
+    diag_scal_species <- matrix(scal)
+  }
 
 
 
@@ -198,7 +207,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
     if ( "biplot" %in%take){
       e_rcor <- x$site_axes$correlation[,choices, drop = FALSE]
       R <- sqrt(x$site_axes$R2_env[choices])
-      sol$biplot <- e_rcor%*% diag(slam/R) %*% diag_scal_sites
+      if (length(R)==1) sR <- matrix(slam/R) else sR <- diag(slam/R)
+      sol$biplot <- e_rcor%*% sR %*% diag_scal_sites
       colnames(sol$biplot)<- paste("dcCA", choices, sep = "")
       attr(sol$biplot, which = "meaning") <- f_meaning("biplot", scaling,
       "biplot scores of environmental variables for display with biplot-traits for fourth-corner correlations")
@@ -247,7 +257,8 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
     if ( "biplot_traits" %in%take){
       t_rcor <- x$species_axes$correlation[,choices, drop = FALSE]
       R <- sqrt(x$species_axes$R2_traits[choices])
-      sol$biplot_traits <- t_rcor %*% diag(diag(diag_scal_species)/R)
+      if (length(R)==1) sR <-diag_scal_species /R else sR <-  diag(diag(diag_scal_species)/R)
+      sol$biplot_traits <- t_rcor %*% sR
       colnames(sol$biplot_traits)<- paste("dcCA", choices, sep = "")
       attr(sol$biplot_traits, which = "meaning") <-f_meaning("biplot", scaling,
         "biplot scores of traits for display with biplot scores for fourth-corner correlation")

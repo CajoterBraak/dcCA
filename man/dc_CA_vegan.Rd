@@ -171,7 +171,7 @@ p_sites   <- anova(mod$RDAonEnv, by = "axis")
 # a species-level permutation test required an dedicated new function
 # anova_species(mod) # see dune_test.r
 
-mod_scores <- scores(mod, display = c("all"), scaling = "sites")
+mod_scores <- vegan::scores(mod, display = c("all"), scaling = "sites")
 
 names(mod_scores)
 str(mod_scores)

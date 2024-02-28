@@ -5,6 +5,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom vegan scores
 ## usethis namespace: end
 
 NULL

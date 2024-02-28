@@ -19,6 +19,7 @@ Print a summary of a dc-CA object
 if \code{\link{dc_CA_vegan}} is called without argument \code{verbose} (or called with \code{verbose = FALSE}).
 }
 \examples{
+
 data("dune_trait_env")
 # rownames are carried forward in results
 rownames(dune_trait_env$comm) <- dune_trait_env$comm$Sites

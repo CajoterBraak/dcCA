@@ -57,6 +57,7 @@ so that also the species scores of the ordination can serve as a criterion (e.g.
 The function has been copied from the \code{PRC} package at https://github.com/CajoterBraak/PRC.
 }
 \examples{
+
 data("dune_trait_env")
 # rownames are carried forward in results
 rownames(dune_trait_env$comm) <- dune_trait_env$comm$Sites

@@ -25,12 +25,12 @@ Description: dcCA analyzes multi-trait multi-environment ecological data by
    The easiest example is the code demo \code{dune}.
 URL: https://doi.org/10.1007/s10651-017-0395-x
 BugReports: https://github.com/CajoterBraak/dcCA/issues
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.5.0), stats, vegan
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: stats, vegan, permute, ggplot2, gridExtra
+Imports: permute, ggplot2, gridExtra
 RoxygenNote: 7.3.0
 NeedsCompilation: no
-Packaged: 2024-02-28 11:09:26 UTC; braak008
+Packaged: 2024-02-28 12:14:37 UTC; braak008
 Author: Cajo J.F ter Braak [aut, cre] (<https://orcid.org/0000-0002-0414-8745>)

@@ -9,6 +9,14 @@
 \arguments{
 \item{object}{an object from \code{\link{dc_CA_vegan}}.}
 
+\item{permutations}{a list of control values for the permutations for species and sites (species first, sites second,
+for traits and environment) as
+ returned by the function \code{\link[permute]{how}}, or
+ the number of permutations required (default 999,
+ or a two-vector with the number for the species-level test first and
+ that for the sites-level second), or
+ a list of two permutation matrices (again, species first, sites second) where each row gives the permuted indices .}
+
 \item{by}{character \code{"axis"} which performs a series of test, one for each axis,
 with the eigenvalue of the axis as  test statistic.
 Default: \code{NULL} which set the test statistic to the inertia named \code{constraintsTE}
@@ -17,14 +25,6 @@ at the species-level, the environmentally constrained inertia explained by the t
 at the community-level, the trait-constrained inertia
 explained by the environmental predictors (without covariates).
 The default (\code{NULL}) is computationally quicker as it avoid computation of an svd of permuted data sets.}
-
-\item{permutation}{a list of control values for the permutations for species and sites (species first, sites second,
-for traits and environment) as
- returned by the function \code{\link[permute]{how}}, or
- the number of permutations required (default 999,
- or a two-vector with the number for the species-level test first and
- that for the sites-level second), or
- a list of two permutation matrices (again, species first, sites second) where each row gives the permuted indices .}
 }
 \value{
 A list of 3 of structures as from \code{\link[vegan]{anova.cca}}. The elements are \code{c("species","sites","max")}

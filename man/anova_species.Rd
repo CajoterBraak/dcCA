@@ -9,6 +9,11 @@ anova_species(object, permutations = 999, by = NULL)
 \arguments{
 \item{object}{an object from \code{\link{dc_CA_vegan}}.}
 
+\item{permutations}{a list of control values for the permutations as
+returned by the function \code{\link[permute]{how}}, or
+the number of permutations required (default 999) or
+a permutation matrix where each row gives the permuted indices.}
+
 \item{by}{character \code{"axis"} which sets the test statistic to the
 first eigenvalue of the dc-CA model.
 Default: \code{NULL} which set the test statistic to the inertia named \code{constraintsTE}
@@ -17,11 +22,6 @@ the environmentally constrained inertia explained by the traits (without trait c
 (which is equal to the trait-constrained inertia
 explained by the environmental predictors (without covariates).)
 The default is quicker computationally as it avoid computation of an svd of permuted data sets.}
-
-\item{permutation}{a list of control values for the permutations as
-returned by the function \code{\link[permute]{how}}, or
-the number of permutations required (default 999) or
-a permutation matrix where each row gives the permuted indices.}
 }
 \value{
 A list with two elements with names \code{table} and \code{eig}.

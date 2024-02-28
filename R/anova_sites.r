@@ -8,7 +8,7 @@
 #' With equal site-totals as in \code{\link{dc_CA_vegan}}, \code{anova(object$RDAonEnv)} is much faster.
 #
 #' @param  object  an object from \code{\link{dc_CA_vegan}}.
-#' @param permutation a list of control values for the permutations as
+#' @param permutations a list of control values for the permutations as
 #'  returned by the function \code{\link[permute]{how}}, or
 #'  the number of permutations required (default 999), or
 #'  a permutation matrix where each row gives the permuted indices.

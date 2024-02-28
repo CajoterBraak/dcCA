@@ -159,8 +159,17 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    dataEnv =dune_trait_env$envir,
 # delete "Species", "Species_abbr" from traits and
 # use all remaining variables due to formulaTraits = ~. (the default)
-                   dataTraits =dune_trait_env$traits[,-c(1,2)],
-                   verbose = TRUE)
+                   dataTraits =dune_trait_env$traits[,-c(1,2)]
+                   )
+class(mod)
+names(mod)
+mod <- print(mod)
+class(mod)
+names(mod)
+names(mod$site_axes)
+names(mod$species_axes)
+names(mod$site_axes$site_scores)
+names(mod$species_axes$species_scores)
 
 set.seed(123)
 # overall test
@@ -171,7 +180,7 @@ p_sites   <- anova(mod$RDAonEnv, by = "axis")
 # a species-level permutation test required an dedicated new function
 # anova_species(mod) # see dune_test.r
 
-mod_scores <- vegan::scores(mod, display = c("all"), scaling = "sites")
+mod_scores <- scores(mod, display = c("all"), scaling = "sites")
 
 names(mod_scores)
 str(mod_scores)

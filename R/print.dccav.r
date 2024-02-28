@@ -43,5 +43,5 @@ print.dccav <- function(x, ...){
 
 
   class(x) <- c("dccav", "list")
-  invisible(x)
+  return(x)
 }

@@ -159,8 +159,8 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    dataEnv =dune_trait_env$envir,
 # delete "Species", "Species_abbr" from traits and
 # use all remaining variables due to formulaTraits = ~. (the default)
-                   dataTraits =dune_trait_env$traits[,-c(1,2)]
-                   )
+                   dataTraits =dune_trait_env$traits[,-c(1,2)],
+                   verbose = TRUE)
 class(mod)
 names(mod)
 mod <- print(mod)

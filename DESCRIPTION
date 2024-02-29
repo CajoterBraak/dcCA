@@ -29,8 +29,8 @@ Depends: R (>= 3.5.0), stats
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: vegan, permute, ggplot2
+Imports: vegan, permute, ggplot2, gridExtra
 RoxygenNote: 7.3.0
 NeedsCompilation: no
-Packaged: 2024-02-29 08:03:49 UTC; braak008
+Packaged: 2024-02-29 09:35:15 UTC; braak008
 Author: Cajo J.F ter Braak [aut, cre] (<https://orcid.org/0000-0002-0414-8745>)

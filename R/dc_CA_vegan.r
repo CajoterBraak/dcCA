@@ -156,7 +156,8 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
 
   if (is.null(dc_CA_vegan_object)){
     #  check and amend: make sure there are no empty rows or columns -----------------------------------------------------------------------
-
+    if (any(is.na(response)))stop("The response should not have missing entries")
+    if (any(response <0)) stop("The response should not have negative values")
     if (is.null(dataTraits)) stop("dataTraits must be specified in dc_CA_vegan")
     if (!is.matrix(response)) response <- as.matrix(response) else stop("response (matrix or df) must specified")
     id0 <-1
@@ -179,12 +180,18 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     id = rep(FALSE, ncol(dataEnv))
     for (ii  in seq_along(id)){
       id[ii] <- sum(is.na(dataEnv[,ii]))==0
+      if (!id[[ii]]) warning(
+        paste("variable", names(dataEnv)[ii], "has missing values and is deleted from the environmental data")
+      )
     }
     dataEnv <- dataEnv[, id]
 
     id = rep(FALSE, ncol(dataTraits))
     for (ii  in seq_along(id)){
       id[ii] <- sum(is.na(dataTraits[,ii]))==0
+      if (!id[[ii]]) warning(
+        paste("variable", names(dataTraits)[ii], "has missing values and is deleted from trait data")
+      )
     }
     dataTraits <- dataTraits[, id]
 

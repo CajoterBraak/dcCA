@@ -2,7 +2,7 @@ Package: dcCA
 Type: Package
 Title: Double Constrained Correspondence Analysis (dc-CA) For
         Trait-Environment Analysis in Ecology
-Version: 1.0.6
+Version: 1.0.7
 Authors@R: person(given ="Cajo J.F", family = "ter Braak", email="cajo.terbraak@wur.nl", 
    role=c("aut","cre"), comment=c(ORCID="0000-0002-0414-8745"))
 Maintainer: Cajo J.F. ter Braak <cajo.terbraak@wur.nl>

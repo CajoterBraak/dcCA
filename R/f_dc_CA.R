@@ -55,10 +55,10 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
   sigma_hat_sq <- RSS / (n - p - 1 )
 
   # Calculate variance-covariance matrix of the estimated regression coefficients
-  XtX_inv <-   diag(chol2inv(QR$qr, size = QR$rank))
+  diagXtX_inv <-   diag(chol2inv(QR$qr, size = QR$rank))
   se <- matrix(NA, nrow = nrow(beta_hat), ncol = length(sigma_hat_sq))
   for (i in seq_along(sigma_hat_sq)){
-    var_covar_matrix <- XtX_inv * sigma_hat_sq[i]
+    var_covar_matrix <- diagXtX_inv * sigma_hat_sq[i]
     # Calculate standard errors
     se[,i] <- sqrt(var_covar_matrix)
   }
@@ -83,7 +83,7 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
 
   sds <- sqrt(colSums(qr.X(QR)^2))
   avg <- attr(QR$qr, which= "scaled:center")
-  VIF <- XtX_inv*sds^2
+  VIF <- diagXtX_inv*sds^2
   beta_stan <- beta_hat * sds
   colnames(beta_stan) <- paste("Regr", seq_len(ncol(beta_stan)),sep ="")
 

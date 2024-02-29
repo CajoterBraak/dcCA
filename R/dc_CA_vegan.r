@@ -221,7 +221,8 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
 
   n <- nrow(out1$data$Y)
   CWMs_orthonormal_traits <- vegan::scores(step1, display= "species",
-                scaling = "species", choices = 1:Rank_mod(step1)) * sqrt((n-1)/n)
+                scaling = "species",
+                choices = 1:length(vegan::eigenvals(out1$CCAonTraits,model="constrained"))) * sqrt((n-1)/n)
   if (rownames(CWMs_orthonormal_traits)[1]=="col1") rownames(CWMs_orthonormal_traits) <- paste("Sam", seq_len((nrow(out1$data$dataEnv))),sep="")
   formulaEnv <- change_reponse(formulaEnv, "CWMs_orthonormal_traits")
   environment(formulaEnv)<- environment()
@@ -238,11 +239,20 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
   )
 
 
-  out$inertia <- try(f_inertia(out))
+  inertia <- try(f_inertia(out))
+
+  if("try-error"%in% class(inertia)) {warning("could not obtain inertia's"); print(inertia)}
+
+  out$inertia <- inertia
+
+
+  if (verbose) {
+    out<-print.dccav(out)
+  }
+
   class(out) <- c("dccav", "list")
 
 
-  if (verbose) out<-print.dccav(out)
   return(out)
 }
 

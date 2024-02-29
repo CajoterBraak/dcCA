@@ -32,5 +32,5 @@ LazyData: true
 Imports: vegan, permute, ggplot2, gridExtra
 RoxygenNote: 7.3.0
 NeedsCompilation: no
-Packaged: 2024-02-29 09:49:49 UTC; braak008
+Packaged: 2024-02-29 11:48:47 UTC; braak008
 Author: Cajo J.F ter Braak [aut, cre] (<https://orcid.org/0000-0002-0414-8745>)

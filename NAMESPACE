@@ -3,6 +3,7 @@
 S3method(anova,dccav)
 S3method(print,dccav)
 S3method(scores,dccav)
+export(Rank_mod)
 export(anova_sites)
 export(anova_species)
 export(dc_CA_vegan)

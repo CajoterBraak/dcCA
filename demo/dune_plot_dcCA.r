@@ -93,8 +93,8 @@ if (is.null( species_groups))   p <- ggplot(data=  dat, aes(x = composite_trait,
 
 p_traits <- p + geom_point(aes( size  = `rel.abundance`)) +
   stat_smooth(aes(weight = `rel.abundance`),method = "lm") +
-   theme(legend.position = c(0.1,0.75)) +
-  xlab("trait composite") + ylab("SNC along gradient")
+  xlab("trait composite") + ylab("SNC along gradient")+
+  theme(legend.position  = c(0.1,0.75))
 
 #p_traits
 #suppressWarnings(print(p_traits))

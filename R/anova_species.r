@@ -304,7 +304,7 @@ SVD <- function(Y){
   ## collect header
   head <- NULL
   ## blocks
-  if (!is.null(getBlocks(x)))
+  if (!is.null(permute::getBlocks(x)))
     head <- paste0(head, paste("Blocks: ", x$blocks.name, "\n"))
   ## plots
   plotStr <- permute::getStrata(x, which = "plots")
@@ -331,7 +331,7 @@ SVD <- function(Y){
   if (isTRUE(type %in% c("series", "grid"))) {
     if(permute::getMirror(x, which = "within"))
       head <- paste(head, "mirrored")
-    if(getConstant(x))
+    if(permute::getConstant(x))
       head <- paste0(head, " constant permutation within each Plot")
   }
   if (isTRUE(all.equal(type, "grid"))) {
@@ -342,6 +342,6 @@ SVD <- function(Y){
     head <- paste0(head, sprintf(ngettext(nc, " %d column",
                                           " %d columns"), nc))
   }
-  paste0(head, "\nNumber of permutations: ", getNperm(x),  "\n")
+  paste0(head, "\nNumber of permutations: ", permute::getNperm(x),  "\n")
 }
 

@@ -61,13 +61,7 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-
-
-
-
-
 anova(mod)
-
 
 a_species <- anova_species(mod)
 a_species

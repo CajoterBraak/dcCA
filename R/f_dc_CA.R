@@ -16,6 +16,7 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
   # the qr_decomp of the weigthed X matrix
   # y is the (yet unweigthed to-be weigthed) response vector or matrix
 
+
   if (is.null(w)){
     if(is.matrix(X_or_qr_decomp_of_X))w=rep(1,nrow(X_or_qr_decomp_of_X))else w = rep(1, nrow(X_or_qr_decomp_of_X$qr))
   }
@@ -28,14 +29,14 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
   # Perform QR decomposition on the weighted design matrix
   if (!is.qr(X_or_qr_decomp_of_X)) {
     X_weighted <-  X_or_qr_decomp_of_X *sqrtw
-    X_or_qr_decomp_of_X <- qr(X_weighted)
-  }
+    QR <- qr(X_weighted)
+  } else QR <- X_or_qr_decomp_of_X
 
   # Compute estimated regression coefficients
-  beta_hat <- qr.coef(X_or_qr_decomp_of_X, y_weightedw)
+  beta_hat <- qr.coef(QR, y_weightedw)
 
   # Calculate fitted values
-  fitted_valuesw <- qr.fitted(X_or_qr_decomp_of_X, y_weightedw)
+  fitted_valuesw <- qr.fitted(QR, y_weightedw)
   #species_traits_correlations<- diag(cor(fitted_valuesw, y_weightedw))# sqrt of R2 below
 
   # Calculate residuals
@@ -50,17 +51,11 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
 
   # Estimate variance of the errors
   n <- length(w)
-  p <- X_or_qr_decomp_of_X$rank
+  p <- QR$rank
   sigma_hat_sq <- RSS / (n - p - 1 )
 
   # Calculate variance-covariance matrix of the estimated regression coefficients
-  #R_inv <- solve(X_or_qr_decomp_of_X)
-
-  R <- qr.R(X_or_qr_decomp_of_X)
-  R_inv <- solve(R)
-  XtX_inv <- R_inv %*% t(R_inv)
-
-
+  XtX_inv <-   chol2inv(QR$qr, size = QR$rank)
   se <- matrix(NA, nrow = nrow(beta_hat), ncol = length(sigma_hat_sq))
   for (i in seq_along(sigma_hat_sq)){
     var_covar_matrix <- XtX_inv * sigma_hat_sq[i]
@@ -68,9 +63,7 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
     se[,i] <- sqrt(diag(var_covar_matrix))
   }
 
-
   TSSfit <- colSums(fitted_valuesw^2)
-
 
   if (scale2){
     sqrtTSS <- sqrt(TSSfit/scale2)
@@ -88,8 +81,8 @@ calculate_b_se_tval <- function(X_or_qr_decomp_of_X, y, w = NULL, scale2 = 0, na
   #SNC <- cbind(y, fitted_values)
   tval <- beta_hat/se
 
-  sds <- sqrt(colSums(qr.X(X_or_qr_decomp_of_X)^2))
-  avg <- attr(X_or_qr_decomp_of_X$qr, which= "scaled:center")
+  sds <- sqrt(colSums(qr.X(QR)^2))
+  avg <- attr(QR$qr, which= "scaled:center")
   VIF <- diag(XtX_inv)*sds^2
   beta_stan <- beta_hat * sds
   colnames(beta_stan) <- paste("Regr", seq_len(ncol(beta_stan)),sep ="")

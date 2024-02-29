@@ -10,9 +10,7 @@ out1 <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
 # use all remaining variables due to formulaTraits = ~. (the default)
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
-
-
-# Forward selection of environmental variables ----------------------------
+# Manual forward selection of environmental variables ----------------------------
 
 # step 1
 # user define:

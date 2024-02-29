@@ -30,9 +30,9 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    formulaTraits = ~ SLA + Height + LDMC + Seedmass + Lifespan ,
                    response = Y,
                    dataEnv =dune_trait_env$envir,
-                   dataTraits =dune_trait_env$traits
-                   )
-out <- print(out) # more efficient for  scores() than just 'print(out)'
+                   dataTraits =dune_trait_env$traits,
+                   verbose = FALSE)
+out <- print(out) # more efficient for  scores() than just 'print(out)' when verbose = FALSE
 
 mod_scores <- scores(out, display = "all")
 names(mod_scores)

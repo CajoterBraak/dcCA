@@ -115,15 +115,11 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
  take <- tabula[display]
 
   if (!"species_axes"%in%names(x)){
-    site_axes <- try(f_env_axes(x))
-    species_axes <- try(f_trait_axes(x))
-    if ("try-error" %in% c(class( site_axes),class(species_axes )))
-    {warning("could not obtain site and species axes"); print(site_axes);print(species_axes)}
+    site_axes <- f_env_axes(x)
+    species_axes <- f_trait_axes(x)
   } else if ("species_axes"%in%names(x)){
-     species_axes<- x$species_axes; site_axes<- x$site_axes
-  }
-
-
+    species_axes<- x$species_axes; site_axes<- x$site_axes
+    }
   # make sure axes chosen by choices are not larger than the rank
   choices <- choices[choices <= length(x$eigenvalues)]
 
@@ -188,9 +184,9 @@ scores.dccav <- function(x, choices=c(1,2), display= c("all"), scaling = "sym", 
 
     if ("regression"%in% take) {
 
-      regr <- site_axes$c_env_normed[,choices +3] %*% diag_scal_sites
+      regr <- x$c_env_normed[,choices +3] %*% diag_scal_sites
       if (tidy)sol$regression <- regr else
-      sol$regression <-cbind(site_axes$c_env_normed[,1:3], regr)
+      sol$regression <-cbind(x$c_env_normed[,1:3], regr)
 
       attr(sol$regression, which = "meaning")<-
         paste("mean, sd, VIF, standardized regression coefficients and their optimistic t-ratio in scaling '",scaling,"'.",sep="")

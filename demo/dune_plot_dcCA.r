@@ -42,12 +42,12 @@ dat$CWM_composite_trait <- mod_scores$sites[,axis]
 
 #site_groups<- PRC::get_focal_and_conditioning_factors(out$RDAonEnv)$condition # site groups
 site_groups<- NULL  # no site groups
-if (!is.null(site_groups)) dat$site_groups <- dat[[site_groups]]
+if (!is.null(site_groups))  dat[[site_groups]]<- site_groups
 
 library(ggplot2)
 if (is.null(site_groups))   p <- ggplot(data=  dat, aes(x = composite_env, y= CWM_composite_trait)) else
   p <- ggplot(data=  dat, aes(x = composite_env, y= CWM_composite_trait, group = .data[[site_groups]], color= .data[[site_groups]]))
-p_env <- p + geom_point() + geom_smooth(method = lm) + xlab("environmental gradient")
+p_CWMs <- p + geom_point() + geom_smooth(method = lm) + xlab("environmental gradient")
 # or to show that PB has no relevance
 #pp <- p + geom_point() + geom_smooth()
 #pp
@@ -89,15 +89,15 @@ if(!is.null(species_groups)) dat$species_groups <- species_groups
 library(ggplot2)
 if (is.null( species_groups))   p <- ggplot(data=  dat, aes(x = composite_trait, y= SNC_composite_env )) else
   p <- ggplot(data=  dat, aes(x = composite_trait, y= SNC_composite_env, group = species_groups, color= species_groups, size=tot_abun))
-#p_traits <- p + geom_point() + stat_smooth(method = lm) + xlab("trait composite") + ylab("SNC along gradient")
+#p_SNCs <- p + geom_point() + stat_smooth(method = lm) + xlab("trait composite") + ylab("SNC along gradient")
 
-p_traits <- p + geom_point(aes( size  = `rel.abundance`)) +
+p_SNCs <- p + geom_point(aes( size  = `rel.abundance`)) +
   stat_smooth(aes(weight = `rel.abundance`),method = "lm") +
   xlab("trait composite") + ylab("SNC along gradient")+
   theme(legend.position  = c(0.1,0.75))
 
-#p_traits
-#suppressWarnings(print(p_traits))
+#p_SNCs
+#suppressWarnings(print(p_SNCs))
 
 plot_env <- plot_species_scores_bk(
   species_scores= env_scores,
@@ -120,21 +120,21 @@ plot_env <- plot_species_scores_bk(
 
 
 if (stats[1]=="weights"){
-gridExtra::grid.arrange(p_env+ ylab("CWM of composite trait"),
+gridExtra::grid.arrange(p_CWMs+ ylab("CWM of composite trait"),
                         plot_traits, ncol =2, widths = c(4,1),
                         top = "Community level of double constrained correspondence analysis",
                         left ="", right =  "")
-suppressWarnings( print(gridExtra::grid.arrange(p_traits,
+suppressWarnings( print(gridExtra::grid.arrange(p_SNCs,
                         plot_env, ncol =2, widths = c(4,1),
                         top = "Species level of double constrained correspondence analysis",
                         left ="", right =  "")))
 
 } else {
-  gridExtra::grid.arrange(p_env+ ylab("CWM of composite trait"),
+  gridExtra::grid.arrange(p_CWMs+ ylab("CWM of composite trait"),
                           plot_env, ncol =2, widths = c(4,1),
                           top = "Community level of double constrained correspondence analysis",
                           left ="", right =  "")
-  suppressWarnings( print(gridExtra::grid.arrange(p_traits,
+  suppressWarnings( print(gridExtra::grid.arrange(p_SNCs,
                                                   plot_traits, ncol =2, widths = c(4,1),
                                                   top = "Species level of double constrained correspondence analysis",
                                                   left ="", right =  "")))

@@ -11,15 +11,7 @@ mod <- dc_CA_vegan(formulaEnv = ~A1+Moist+Mag+Use+Manure,
                    dataTraits =dune_trait_env$traits[,-c(1,2)],
                    verbose = TRUE)
 class(mod)
-names(mod)
-mod <- print(mod)
-class(mod)
-names(mod)
-names(mod$site_axes)
-names(mod$species_axes)
-names(mod$site_axes$site_scores)
-names(mod$species_axes$species_scores)
-
+print(mod)
 set.seed(123)
 # overall test
 # community-level permutation test
@@ -29,10 +21,11 @@ p_sites   <- anova(mod$RDAonEnv, by = "axis")
 # a species-level permutation test required an dedicated new function
 # anova_species(mod) # see dune_test.r
 
-mod_scores <- scores(mod, display = c("all"), scaling = "sites")
+mod_scores <- scores(mod, display = c("all"), scaling = "sym")
 
-names(mod_scores)
-str(mod_scores)
+
+(meaning <- lapply(mod_scores, function(x)attr(x,which = "meaning")))
+
 head(mod_scores$sites)
 attr(mod_scores$sites, which = "meaning")
 mod_scores$regression
@@ -46,9 +39,9 @@ mod_scores$biplot_traits
 mod_scores$centroids_traits
 
 
-mod_scores <- scores(mod, display = "all", tidy = TRUE)
-names(mod_scores)
-levels(mod_scores$score)
+mod_scores_tidy <- scores(mod, display = "all", tidy = TRUE)
+names(mod_scores_tidy)
+levels(mod_scores_tidy$score)
 
 
 # for illustration: a dc-CA model with a trait covariate

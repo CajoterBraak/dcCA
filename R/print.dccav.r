@@ -11,10 +11,8 @@
 print.dccav <- function(x, ...){
 
   if (!"species_axes"%in%names(x)){
-    x$site_axes <-  try(f_env_axes(x))
-    x$species_axes <- try(f_trait_axes(x))
-    if ("try-error" %in% c(class( x$site_axes),class(x$species_axes )))
-    {warning("could not obtain site and species axes"); print(site_axes);print(species_axes)}
+    x$site_axes <-  f_env_axes(x)
+    x$species_axes <- f_trait_axes(x)
     x$c_env_normed <- x$site_axes$c_env_normed
     x$c_traits_normed <- x$species_axes$c_traits_normed
   }
@@ -45,5 +43,5 @@ print.dccav <- function(x, ...){
 
 
   class(x) <- c("dccav", "list")
-  return(x)
+  invisible(x)
 }

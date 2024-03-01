@@ -2,7 +2,7 @@
 #' @param object result of dc_CA_vegan of class dccav
 #' @param partial logical (TRUE not implemented)
 #' @noRd
-#' @export
+# @export
 Rank_mod <- function(object, partial = FALSE){
   # returns the rank of a dc-CA model
   if ("dccav" %in% class(object)) {

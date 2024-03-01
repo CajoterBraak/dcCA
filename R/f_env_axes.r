@@ -3,7 +3,7 @@
 #' @param which_cor character or names of environmental variables
 #' for which inter-set correlations must calculated.
 #' Default: "in_model" for all environmental variables in the model specified by \code{formulaEnv}.
-#' @noRd
+# @noRd
 # @export
 f_env_axes <- function(out, which_cor = "in model"){
   # which_cor character or names of environmental variables
@@ -13,7 +13,7 @@ f_env_axes <- function(out, which_cor = "in model"){
   #print(names(out))
   myconst <- sqrt(out$Nobs*out$RDAonEnv$tot.chi)
   CWM <- as.matrix(vegan::scores(out$RDAonEnv, display = c("sites"), scaling =  "sites",
-                choices = seq_len(Rank_mod(out$RDAonEnv)), const = myconst))
+                choices =  seq_len(Rank_mod(out$RDAonEnv)), const = myconst))
   res <- calculate_b_se_tval(get_QR(out$RDAonEnv), y=CWM,
                              w = out$weights$rows,  scale2 = 0, name = "CWM")
   c_env_normed <- res$coef_normed

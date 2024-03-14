@@ -3,6 +3,13 @@
 #' \code{plot_dcCA} plots the CWMs and SNCs of a dc-CA axis against this axis,
 #'  with optional centroids and colors for groups of sites and/or species if available in the data.
 #' @inheritParams getPlotdata
+#' @param gradient_description character or 2-character vector for the trait
+#' and environmental gradient, respectively. What to plot in the vertical line plots to describe the
+#' dc-CA axis (trait and environmental gradients). Default: \code{correlation} for intra-set correlations
+#' of both sets of variables with the dc-CA axis. Other values are:
+#' c("regression","weights","tvalues", "inter_set_correlation") for regression weights, t-values and
+#' (other) namely inter-set correlation, being the correlation of the SNCs and CWMs with the traits and
+#' environmental variables, respectively.
 #' @param facet logical. Default \code{TRUE} for CWMs and SNCs plots in separate panels.
 #' This parameter changes the position of the centroid names (from left to right for the environmental
 #' centroids).
@@ -14,7 +21,7 @@
 #' @param species_groups name of a variable in \code{dataTraits} of \code{\link{dc_CA_vegan}}. Default \code{NULL}
 #' for no grouping. NOT yet implemented.
 #' @param verbose logical. Default \code{TRUE} for plotting the result.
-#' @param width relative width of the CWM-SNC plot, the correlation/weight plot
+#' @param widths relative widths of the CWM-SNC plot, the correlation/weight plot
 #' and the species plot. (see \code{\link[gridExtra]{grid.arrange}}). Default \code{c(5,1,1)}.
 #' @details
 #' The lines with \code{with_lines=TRUE} do no use the weights in this version and

@@ -16,9 +16,9 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Use+Manure+Condition(Mag),
 
 plot_dcCA_CWM_SNC(out, facet = FALSE)
 CWM_SNC_env_trait_scores <- getPlotdata(out)
-myplot<-plot_dcCA(out)
+myplot<-plot_dcCA(out, verbose = FALSE)
 names(myplot)
-plot_dcCA(out, gradient_description = c("corre", "tval") )
+plot_dcCA(out, gradient_description = c("corre", "tval"), verbose = FALSE )
 
 newnames_without_covariates <-list(traits= c("SLA", "Height", "LDMC", "Seedmass", "annual", "perennial"),
                 env= c("A1 horizon", "Moisture", "Type of use",  "Manure"))

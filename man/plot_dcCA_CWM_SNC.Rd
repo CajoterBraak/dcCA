@@ -71,6 +71,6 @@ out <- dc_CA_vegan(formulaEnv = ~A1+Moist+Use+Manure+Condition(Mag),
                    dataEnv =dune_trait_env$envir,
                    dataTraits =dune_trait_env$traits,
                    verbose = FALSE)
-plot_dcCA(out)
+plot_dcCA(out, verbose = FALSE)
 
 }

@@ -50,6 +50,7 @@ get_focal_and_conditioning_factors <- function(object, factors_only = TRUE){
              unlist(tl2[which (sapply(tl2, length) >1)])))
     if (!is.na(idC))focal_nams<- focal_nams[!focal_nams %in% condi]
   } else {
+
     # which interaction has max length, or 1 of no interaction
     id_interactions <- which.max (sapply(tl2, length))
     if (id_interactions==1 && length(tl2[[id_interactions]])==1){
@@ -58,6 +59,9 @@ get_focal_and_conditioning_factors <- function(object, factors_only = TRUE){
       #focal_nams <- setdiff(unlist(tl2), Condi_nams)
       id <- unlist(tl2) %in% Condi_nams
       focal_nams <- unlist(tl2)[!id]
+      if (factors_only){
+        focal_nams <- focal_nams[focal_nams %in% names(object$terminfo$xlev)]
+      }
      # if (length(focal_nams)==1) {Condi_nams <- focal_nams} else Condi_nams <-NULL
     } else {
       interaction <-  unlist(tl2[id_interactions])

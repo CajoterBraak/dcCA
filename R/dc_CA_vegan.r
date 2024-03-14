@@ -195,6 +195,12 @@ dc_CA_vegan <- function(formulaEnv = ~., formulaTraits = ~., response =NULL, dat
     }
     dataTraits <- dataTraits[, id]
 
+    dataEnv <- as.data.frame(lapply(dataEnv, function(x){if (is.character(x)) x<- as.factor(x) else x; return(x) } ))
+    dataTraits <- as.data.frame(lapply(dataTraits, function(x){if (is.character(x)) x<- as.factor(x) else x; return(x) } ))
+
+    rownames(dataEnv) <- rownames(response)
+    rownames(dataTraits) <- colnames(response)
+
 
     # end of check -----------------------------------------------------------------------
     # close the data (divide by the row total, to get strictly compositional data) -----------------------------------------------------------------------

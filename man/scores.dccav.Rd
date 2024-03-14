@@ -20,10 +20,12 @@
 \item{choices}{integer vector of which axes to obtain. Default: all dc-CA axes.}
 
 \item{display}{a character vector, one or more of
-\code{c("all","species","sites","sp", "wa", "lc","bp", "cor", "reg", "cn",
-"lc_traits", "reg_traits", "cor_traits","bp_traits","cn_traits")}.
-The first ten are as in \code{\link[vegan]{scores.cca}} (except \code{"cor"})
-and remaining ones are similar scores for traits.}
+\code{c("all","species","sites","sp", "wa", "lc","bp", "cor", "ic", "reg","tval", "cn",
+"lc_traits", "reg_traits","tval_traits" ,"cor_traits","ic_traits","bp_traits","cn_traits")}.
+The most items are as in \code{\link[vegan]{scores.cca}}, except \code{"cor"} and \code{"ic"}, for
+inter-set and intra-set correlations, respectively, and \code{"tval"} for
+the (over-optimistic) t-values of the regression coefficients.
+The remaining scores are analogous scores for species and traits.}
 
 \item{scaling}{numeric (1,2 or 3) or character \code{"sites", "species" or "symmetric"}. Default: "sym".
 Either site- (1) or species- (2) related scores are scaled by eigenvalues,
@@ -46,9 +48,52 @@ See \code{\link[vegan]{scores.cca}}.}
 \value{
 A data frame if \code{tidy = TRUE}, a matrix if a single item is asked for and a named list of matrices if more than one item
 is asked for. The following names can be included: \code{c("sites",
-"constraints_sites", "centroids", "regression", "correlation", "biplot",
-"species", "constraints_species", "regression_traits", "correlation_traits",
-"biplot_traits", "centroids_traits")}. Each matrix has an attritute \code{"meaning"} explaining its content.
+"constraints_sites", "centroids", "regression", "t_values" ,"correlation","intra_set_correlation", "biplot",
+"species", "constraints_species", "regression_traits", "t_values_traits", "correlation_traits","intra_set_correlation_traits",
+"biplot_traits", "centroids_traits")}. Each matrix has an attribute \code{"meaning"} explaining its meaning.
+With \code{tidy=TRUE}, the resulting data frame has attributes \code{"scaling"} and \code{"meaning"}; the latter has
+two columns: (1) name of score type and (2) its meaning, usage and interpretation.
+
+An example of the meaning of scores in scaling \code{"symmetric"} with \code{display ="all"}:
+\describe{
+\item{ sites }{ CMWs of the trait axes (constraints species) in scaling 'symmetric' optimal for biplots and,
+ almost so, for inter-site distances. }
+ \item{ constraints_sites }{ linear combination of the environmental predictors and the covariates
+  (making the ordination axes orthogonal to the covariates)'
+   in scaling 'symmetric' optimal for biplots and, almost so, for inter-site distances. }
+ \item{ regression }{ mean, sd, VIF, standardized regression coefficients and their
+ optimistic t-ratio in scaling 'symmetric'. }
+ \item{ t_values }{ t-values of the coefficients of the regression of the CWMs of
+ the trait composite on to the environmental variables }
+ \item{ correlation }{ inter set correlation,
+  correlation between environmental variables and the sites scores (CWMs) }
+ \item{ intra_set_correlation }{ intra set correlation, correlation between
+  environmental variables and the dc-ca axis (constrained sites scores) }
+ \item{ biplot }{ biplot scores of environmental variables for display with biplot-traits
+ for fourth-corner correlations in scaling 'symmetric'. }
+  \item{ centroids }{ environmental category means of the site scores in scaling 'symmetric'
+ optimal for biplots and, almost so, for inter-environmental category distances.}
+ \item{ species }{ SNC on the environmental axes (constraints sites) in scaling 'symmetric'
+  optimal for biplots and, almost so, for inter-species distances. }
+ \item{ constraints_species }{ linear combination of the traits and the trait covariates
+  (making the ordination axes orthogonal to the covariates)' in scaling 'symmetric' optimal
+   for biplots and, almost so, for inter-species distances. }
+ \item{ regression_traits }{ mean, sd, VIF, standardized regression coefficients and
+  their optimistic t-ratio in scaling 'symmetric'. }
+ \item{ t_values_traits }{ t-values of the coefficients of the regression of the
+  SNCs along a dc-CA axis on to the traits }
+ \item{ correlation_traits }{ inter set correlation,
+   correlation between traits and the species scores (SNCs) }
+ \item{ intra_set_correlation_traits }{ intra set correlation,
+  correlation between traits and the dc-ca axis (constrained species scores) }
+ \item{ biplot_traits }{ biplot scores of traits for display with biplot scores
+  for fourth-corner correlation in scaling 'symmetric'. }
+  \item{ centroids_traits }{ trait category means of the species scores in scaling
+   'symmetric' optimal for biplots and, almost so, for inter-trait category distances. }
+}
+
+The statements on optimality for distance interpretations are based on the \code{scaling}
+and the relative magnitude of the dc-CA eigenvalues of the chosen axes.
 }
 \description{
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,

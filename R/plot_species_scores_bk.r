@@ -27,11 +27,11 @@
 #' The function has been copied from the \code{PRC} package at https://github.com/CajoterBraak/PRC.
 #'
 #' @return  a ggplot object
-#' @example demo/dune_plot_dcCA.R
+#' @example demo/dune_plot_gd.r
 #' @export
 
 plot_species_scores_bk <- function(species_scores, ylab = "scores", threshold=7, y_lab_interval=0.5,
-                                   speciesname= NULL, scoresname = "RDA1",selectname = "Fratio1", expand= 0.2, verbose = TRUE){
+   speciesname= NULL, scoresname = "RDA1",selectname = "Fratio1", expand= 0.2, verbose = TRUE){
 
 # species_scores is a matrix or dataframe  with rownames and a column with name scoresname (default: "RDA1") (species scores from vegan, for example)
 #

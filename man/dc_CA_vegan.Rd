@@ -268,5 +268,5 @@ vegan: Community Ecology Package. R package version 2.6-4.
 http://CRAN.R-project.org/package=vegan.
 }
 \seealso{
-\code{\link{scores.dccav}}, \code{\link{print.dccav}} and \code{\link{anova.dccav}}
+\code{\link{plot_dcCA}}, \code{\link{scores.dccav}}, \code{\link{print.dccav}} and \code{\link{anova.dccav}}
 }

@@ -23,11 +23,11 @@ plot_dcCA_CWM_SNC(
 
 \item{envfactor}{name of row factor to display as color and lines in the CWM plot (default \code{NULL}).
 The default extracts the factor from the environmental model.
-If set to \code{NA}, no additional coloring or lines are displayed.}
+If set to \code{NA}, no additional coloring and lines are displayed.}
 
 \item{traitfactor}{name of column factor to display as color and lines in the SNC plot (default \code{NULL}).
 The default extracts the factor from the trait model.
-If set to \code{NA}, no additional coloring or lines are displayed.}
+If set to \code{NA}, no additional coloring and lines are displayed.}
 
 \item{facet}{logical. Default \code{TRUE} for CWMs and SNCs plots in separate panels.
 This parameter changes the position of the centroid names (from left to right for the environmental

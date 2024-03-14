@@ -41,8 +41,8 @@ internal structure of the \code{vegan} \code{\link[vegan]{cca.object}}
 in the not-exported functions \code{f_inertia} and \code{get_QR}
 in the source code file \code{functions_using_cca_object_internals.r}.
 
-The main user-functions are \code{\link{dc_CA_vegan}},\code{\link{plot_dcCA}}, \code{\link{scores.dccav}},
-\code{\link{print.dccav}} and \code{\link{anova.dccav}}.
+The main user-functions are \code{\link{dc_CA_vegan}}, \code{\link{plot_dcCA}}, \code{\link{scores.dccav}},
+ \code{\link{print.dccav}} and \code{\link{anova.dccav}}.
 }
 \references{
 ter Braak, CJF, Šmilauer P, and Dray S. 2018. Algorithms and biplots for

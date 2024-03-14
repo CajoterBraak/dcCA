@@ -2,8 +2,8 @@
 % Please edit documentation in R/getPlotdata.r
 \name{getPlotdata}
 \alias{getPlotdata}
-\title{Utility function for extracting data from a \code{\link{dc_CA_vegan}} object for plotting
- a single axis.}
+\title{Utility Function: Extracting Data From A \code{\link{dc_CA_vegan}} Object For Plotting
+ A Single Axis.}
 \usage{
 getPlotdata(
   object,
@@ -22,19 +22,19 @@ getPlotdata(
 
 \item{envfactor}{name of row factor to display as color and lines in the CWM plot (default \code{NULL}).
 The default extracts the factor from the environmental model.
-If set to \code{NA}, no additional coloring or lines are displayed.}
+If set to \code{NA}, no additional coloring and lines are displayed.}
 
 \item{traitfactor}{name of column factor to display as color and lines in the SNC plot (default \code{NULL}).
 The default extracts the factor from the trait model.
-If set to \code{NA}, no additional coloring or lines are displayed.}
+If set to \code{NA}, no additional coloring and lines are displayed.}
 
 \item{newnames}{a list  with two elements:
 names for traits and for environmental variables, default \code{NULL} for
 names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.}
 
 \item{facet}{logical. Default \code{TRUE} for CWMs and SNCs plots in separate panels.
-This parameter changes the position of the centroid names (from left to right for the environmental
-centroids).}
+If \code{FALSE},this parameter changes the position of the environmental centroid names
+(from left to right).}
 
 \item{remove.centroids}{logical to remove any centroids from the plot data (default \code{FALSE}).
 Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.}

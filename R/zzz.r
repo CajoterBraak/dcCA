@@ -38,8 +38,8 @@
 #' in the not-exported functions \code{f_inertia} and \code{get_QR}
 #' in the source code file \code{functions_using_cca_object_internals.r}.
 #'
-#' The main user-functions are \code{\link{dc_CA_vegan}},\code{\link{plot_dcCA}}, \code{\link{scores.dccav}},
-#' \code{\link{print.dccav}} and \code{\link{anova.dccav}}.
+#' The main user-functions are \code{\link{dc_CA_vegan}}, \code{\link{plot_dcCA}}, \code{\link{scores.dccav}},
+#'  \code{\link{print.dccav}} and \code{\link{anova.dccav}}.
 #'
 #'
 #'

@@ -28,13 +28,14 @@ A list with two elements with names \code{table} and \code{eig}.
  The \code{table} is as from \code{\link[vegan]{anova.cca}} and \code{eig} gives the dc-CA eigenvalues,
  This output can be used for scripting forward selection of traits,
  similar to the forward selection of environmental
- variables in the demo \code{dune_FS_dcCA.r}.
+ variables in the demo \code{dune_select.r}.
 }
 \description{
 \code{anova_species} performs a species-level permutation test of dc-CA.
 The test uses residual predictor permutation (ter Braak 2022), which is robust
 against differences in species total abundance in the \code{response} in \code{\link{dc_CA_vegan}} (ter Braak & te Beest, 2022)
-The arguments of the function are similar to those of \code{\link[vegan]{anova.cca}}, but more restricted.
+The arguments of the function are similar to those of \code{\link[vegan]{anova.cca}},
+but more restrictive.
 }
 \details{
 In \code{\link{anova_species}}, the first step extracts the species-niche centroids (SNC)

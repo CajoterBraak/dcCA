@@ -99,7 +99,6 @@ and the relative magnitude of the dc-CA eigenvalues of the chosen axes.
 This function works very much like the \code{vegan} \code{\link[vegan]{scores}} function,
 in particular \code{\link[vegan]{scores.cca}}, with the additional results such
 as regression coefficients and linear combinations of traits \code{('regr_traits','lc_traits')}
-In the current version, there is a single scaling (\code{scaling = "sites"}).
 All scores from CA obey the so called transition formulas and so do the scores of CCA and dc-CA.
 The differences are, for CCA, that the linear combinations of environmental variables
 (the \emph{constrained} site scores)

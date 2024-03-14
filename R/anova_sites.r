@@ -25,7 +25,7 @@
 #' The algorithm is two-step. The first step is a \code{\link[vegan]{cca}}
 #' of the transposed \code{response} on to the traits using
 #' \code{formulaTraits}. The second is a weighted redundancy analysis of the community weighted means (CWM) of
-#' orthonormalized traits againt the environemtal variables using \code{formulaEnv} using a
+#' orthonormalized traits againt the environemtal variables using \code{formulaEnv} and
 #' published R-code for weighted redundancy analysis, which includes statistical significance
 #' tests using residual predictor permutation (ter Braak, 2022).
 #'

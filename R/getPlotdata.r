@@ -1,5 +1,5 @@
-#'  Utility function for extracting data from a \code{\link{dc_CA_vegan}} object for plotting
-#'  a single axis.
+#'  Utility Function: Extracting Data From A \code{\link{dc_CA_vegan}} Object For Plotting
+#'  A Single Axis.
 #' @description
 #'  \code{getPlotdata} extracts data from a \code{\link{dc_CA_vegan}} object for plotting the
 #' CWMs and SNCs of a single axis.
@@ -7,10 +7,10 @@
 #' @param axis the axis number to get (default 1).
 #' @param envfactor name of row factor to display as color and lines in the CWM plot (default \code{NULL}).
 #' The default extracts the factor from the environmental model.
-#' If set to \code{NA}, no additional coloring or lines are displayed.
+#' If set to \code{NA}, no additional coloring and lines are displayed.
 #' @param traitfactor name of column factor to display as color and lines in the SNC plot (default \code{NULL}).
 #' The default extracts the factor from the trait model.
-#' If set to \code{NA}, no additional coloring or lines are displayed.
+#' If set to \code{NA}, no additional coloring and lines are displayed.
 #' @param newnames a list  with two elements:
 #' names for traits and for environmental variables, default \code{NULL} for
 #' names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.
@@ -18,8 +18,8 @@
 #' @param remove.centroids logical to remove any centroids from the plot data (default \code{FALSE}).
 #' Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.
 #' @param facet logical. Default \code{TRUE} for CWMs and SNCs plots in separate panels.
-#' This parameter changes the position of the centroid names (from left to right for the environmental
-#' centroids).
+#' If \code{FALSE},this parameter changes the position of the environmental centroid names
+#' (from left to right).
 #' @example demo/dune_plot_dcCA.R
 #' @export
 #'

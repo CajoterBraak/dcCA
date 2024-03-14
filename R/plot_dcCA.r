@@ -25,7 +25,8 @@
 #' and the species plot. (see \code{\link[gridExtra]{grid.arrange}}). Default \code{c(5,1,1)}.
 #' @details
 #' The lines with \code{with_lines=TRUE} do no use the weights in this version and
-#' give an extra band for an not-existing line (for missing centroids).
+#' may give an extra band for an not-existing line (for missing centroids).
+#'
 #' If you want to set new names, look at the names with all arguments default, i.e.
 #' \code{myplot <- plot_dcCA(object)}, and then consult \code{myplot$name.list$newnames} for the
 #' order of the names of traits and environmental variables. Note that covariates should not be in the

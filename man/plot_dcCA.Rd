@@ -35,11 +35,11 @@ environmental variables, respectively.}
 
 \item{envfactor}{name of row factor to display as color and lines in the CWM plot (default \code{NULL}).
 The default extracts the factor from the environmental model.
-If set to \code{NA}, no additional coloring or lines are displayed.}
+If set to \code{NA}, no additional coloring and lines are displayed.}
 
 \item{traitfactor}{name of column factor to display as color and lines in the SNC plot (default \code{NULL}).
 The default extracts the factor from the trait model.
-If set to \code{NA}, no additional coloring or lines are displayed.}
+If set to \code{NA}, no additional coloring and lines are displayed.}
 
 \item{nspecies}{integer. Default \code{20} for including a vertical species plot
 with at most \code{nspecies} that have the highest contribution.}
@@ -73,7 +73,8 @@ Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the enviro
 }
 \details{
 The lines with \code{with_lines=TRUE} do no use the weights in this version and
-give an extra band for an not-existing line (for missing centroids).
+may give an extra band for an not-existing line (for missing centroids).
+
 If you want to set new names, look at the names with all arguments default, i.e.
 \code{myplot <- plot_dcCA(object)}, and then consult \code{myplot$name.list$newnames} for the
 order of the names of traits and environmental variables. Note that covariates should not be in the

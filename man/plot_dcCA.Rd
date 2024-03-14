@@ -48,6 +48,9 @@ This parameter changes the position of the centroid names (from left to right fo
 centroids).
 If \code{facet = TRUE} and \code{with_lines = TRUE}, the line fits ignore groups of species and of sites.}
 
+\item{remove.centroids}{logical to remove any centroids from the plot data (default \code{FALSE}).
+Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.}
+
 \item{with_lines}{logical. Default \code{FALSE}. TRUE for straight lines though groups of points.
 \code{traitfactor = NA} and \code{envfactor = NA}. Centroids are not displayed in this case.}
 

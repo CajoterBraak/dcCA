@@ -15,7 +15,7 @@
 #' names for traits and for environmental variables, default \code{NULL} for
 #' names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.
 # @param size.centroids size of centroid labels and points
-#' @param remove.centroid logical to remove any centroids from the plot data (default \code{FALSE}).
+#' @param remove.centroids logical to remove any centroids from the plot data (default \code{FALSE}).
 #' Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.
 #' @param facet logical. Default \code{TRUE} for CWMs and SNCs plots in separate panels.
 #' This parameter changes the position of the centroid names (from left to right for the environmental
@@ -38,14 +38,14 @@ getPlotdata <- function(object, axis=1, envfactor=NULL, traitfactor=NULL,newname
 
   traitINcondition <- envINcondition <- FALSE
   if (is.null(envfactor)){
-    ff <- dcCA:::get_focal_and_conditioning_factors(object$RDAonEnv, factors_only = TRUE)#'fo'
+    ff <- get_focal_and_conditioning_factors(object$RDAonEnv, factors_only = TRUE)#'fo'
     if (is.null(ff$condition)){envfactor <- ff$`focal factor`[1]; envINcondition <- FALSE }else{
       envfactor <- ff$condition[1]; envINcondition <- TRUE
     }
   }
 
   if (is.null(traitfactor)){
-    ff <- dcCA:::get_focal_and_conditioning_factors(object$CCAonTraits, factors_only = TRUE)#'fo'
+    ff <- get_focal_and_conditioning_factors(object$CCAonTraits, factors_only = TRUE)#'fo'
     if (is.null(ff$condition)){traitfactor <- ff$`focal factor`[1]; traitINcondition <- FALSE }else{
       traitfactor <- ff$condition[1]; traitINcondition <- TRUE
     }
@@ -131,7 +131,7 @@ getPlotdata <- function(object, axis=1, envfactor=NULL, traitfactor=NULL,newname
   scorepair$sizeweight  <- scorepair$weight
 
   #todo
-  scorepair$sizeweight[scorepair$score%in% c("centroids","centroids_traits")] <-0.5 * median(scorepair$sizeweight,na.rm= TRUE)
+  scorepair$sizeweight[scorepair$score%in% c("centroids","centroids_traits")] <-0.5 * stats::median(scorepair$sizeweight,na.rm= TRUE)
   scorepair$smoothweight  <-scorepair$weight
   scorepair$smoothweight[scorepair$score%in% c("centroids","centroids_traits")] <- NA# 0.0000001*min(scorepair$smoothweight,na.rm = TRUE)
 

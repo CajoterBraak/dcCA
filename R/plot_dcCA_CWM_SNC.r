@@ -52,7 +52,7 @@ if (with_lines){
               linewidth = 1, method = stats::lm, na.rm=TRUE)#+ scale_shape(guide="none")# ,
                                         # method.args = list(weight = scorepair[["smoothweight"]]))
     else
-    pp2 <-  pp2 +  ggplot2::geom_smooth(ggplot2::aes(x= .data[["xforsmooth"]],group=.data[["type"]]),linewidth = 1, method = lm, na.rm=TRUE)
+    pp2 <-  pp2 +  ggplot2::geom_smooth(ggplot2::aes(x= .data[["xforsmooth"]],group=.data[["type"]]),linewidth = 1, method = stats::lm, na.rm=TRUE)
                            #  method.args = list(weight = scorepair[["smoothweight"]]))
 }
 

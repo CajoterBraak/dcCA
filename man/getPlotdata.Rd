@@ -36,7 +36,7 @@ names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE
 This parameter changes the position of the centroid names (from left to right for the environmental
 centroids).}
 
-\item{remove.centroid}{logical to remove any centroids from the plot data (default \code{FALSE}).
+\item{remove.centroids}{logical to remove any centroids from the plot data (default \code{FALSE}).
 Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.}
 }
 \description{

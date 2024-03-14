@@ -235,10 +235,10 @@ fplot_species<- function(pd,object, nspecies=0, species_groups = NULL){
     SNC_LC_mat <- cbind(composite_trait,  contribution, species_groups);
     colnames(SNC_LC_mat) <- c("composite_trait","contribution", "species_group")[seq_len(ncol(SNC_LC_mat))]
     rownames(SNC_LC_mat) <- colnames(object$data$Y)
-    sspecies <- sort(SNC_LC_mat[,"contribution"], decr = TRUE)
+    sspecies <- sort(SNC_LC_mat[,"contribution"], decreasing  = TRUE)
     threshold <- SNC_LC_mat[names(sspecies)[nspecies+1],"contribution"]
     # ready for plotting
-    plot_species <- dcCA::plot_species_scores_bk(
+    plot_species <- plot_species_scores_bk(
       species_scores= SNC_LC_mat,
       ylab = "trait composite",
       threshold = threshold,

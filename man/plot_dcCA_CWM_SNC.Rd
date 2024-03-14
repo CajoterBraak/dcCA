@@ -38,6 +38,9 @@ If \code{facet = TRUE} and \code{with_lines = TRUE}, the line fits ignore groups
 names for traits and for environmental variables, default \code{NULL} for
 names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.}
 
+\item{remove.centroids}{logical to remove any centroids from the plot data (default \code{FALSE}).
+Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.}
+
 \item{with_lines}{logical. Default \code{TRUE} for straight lines though groups of points.
 \code{traitfactor = NA} and \code{envfactor = NA}. Centroids are not displayed in this case.}
 

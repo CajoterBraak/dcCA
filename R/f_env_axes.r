@@ -1,4 +1,4 @@
-#' Obtain Column (Sites) Related Scores, notably regression coefs and their optimistic t-ratios
+#' Utility Function: Obtain Column (Sites) Related Scores, notably regression coefs and their optimistic t-ratios
 #' @param out object from \code{\link{dc_CA_vegan}}
 #' @param which_cor character or names of environmental variables
 #' for which inter-set correlations must calculated.

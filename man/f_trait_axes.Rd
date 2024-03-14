@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_trait_axes.r
 \name{f_trait_axes}
 \alias{f_trait_axes}
-\title{Obtain Column (Species) Related Scores}
+\title{Utility Function: Obtain Column (Species) Related Scores}
 \usage{
 f_trait_axes(out, which_cor = "in model")
 }
@@ -14,5 +14,5 @@ for which inter-set correlations must calculated.
 Default: "in_model" for all traits and variables in the model specified by \code{formulaTraits}.}
 }
 \description{
-Obtain Column (Species) Related Scores
+Utility Function: Obtain Column (Species) Related Scores
 }

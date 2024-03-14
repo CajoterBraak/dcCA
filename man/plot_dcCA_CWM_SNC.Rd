@@ -36,8 +36,7 @@ If \code{facet = TRUE} and \code{with_lines = TRUE}, the line fits ignore groups
 
 \item{newnames}{a list  with two elements:
 names for traits and for environmental variables, default \code{NULL} for
-names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.
-\emph{i.e.} \code{list(levels(traitfactor), levels(envfactor))}.}
+names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.}
 
 \item{with_lines}{logical. Default \code{TRUE} for straight lines though groups of points.
 \code{traitfactor = NA} and \code{envfactor = NA}. Centroids are not displayed in this case.}

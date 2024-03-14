@@ -14,9 +14,6 @@
 #' @param species_groups name of a variable in \code{dataTraits} of \code{\link{dc_CA_vegan}}. Default \code{NULL}
 #' for no grouping. NOT yet implemented.
 #' @param verbose logical. Default \code{TRUE} for plotting the result.
-#' @param newnames a list  with two elements:
-#' names for traits and for environmental variables, default \code{NULL} for
-#' names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.
 #' @param width relative width of the CWM-SNC plot, the correlation/weight plot
 #' and the species plot. (see \code{\link[gridExtra]{grid.arrange}}). Default \code{c(5,1,1)}.
 #' @details

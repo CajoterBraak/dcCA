@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_env_axes.r
 \name{f_env_axes}
 \alias{f_env_axes}
-\title{Obtain Column (Sites) Related Scores, notably regression coefs and their optimistic t-ratios}
+\title{Utility Function: Obtain Column (Sites) Related Scores, notably regression coefs and their optimistic t-ratios}
 \usage{
 f_env_axes(out, which_cor = "in model")
 }
@@ -14,5 +14,5 @@ for which inter-set correlations must calculated.
 Default: "in_model" for all environmental variables in the model specified by \code{formulaEnv}.}
 }
 \description{
-Obtain Column (Sites) Related Scores, notably regression coefs and their optimistic t-ratios
+Utility Function: Obtain Column (Sites) Related Scores, notably regression coefs and their optimistic t-ratios
 }

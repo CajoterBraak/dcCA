@@ -1,5 +1,5 @@
-#'  Utility function for extracting data from a \code{\link{dc_CA_vegan}} object for plotting the
-#' CWMs and SNCs of a single axis.
+#'  Utility function for extracting data from a \code{\link{dc_CA_vegan}} object for plotting
+#'  a single axis.
 #' @description
 #'  \code{getPlotdata} extracts data from a \code{\link{dc_CA_vegan}} object for plotting the
 #' CWMs and SNCs of a single axis.
@@ -14,7 +14,6 @@
 #' @param newnames a list  with two elements:
 #' names for traits and for environmental variables, default \code{NULL} for
 #' names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.
-#' \emph{i.e.} \code{list(levels(traitfactor), levels(envfactor))}.
 # @param size.centroids size of centroid labels and points
 #' @param remove.centroid logical to remove any centroids from the plot data (default \code{FALSE}).
 #' Can be a two-vector, \emph{e.g.} \code{c(TRUE, FALSE)} to remove only the environmental centroids.

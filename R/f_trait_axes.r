@@ -1,4 +1,4 @@
-#' Obtain Column (Species) Related Scores
+#' Utility Function: Obtain Column (Species) Related Scores
 #' @param out object from \code{\link{dc_CA_vegan}}
 #' @param which_cor character or names of traits
 #' for which inter-set correlations must calculated.

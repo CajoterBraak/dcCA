@@ -2,8 +2,8 @@
 % Please edit documentation in R/getPlotdata.r
 \name{getPlotdata}
 \alias{getPlotdata}
-\title{Utility function for extracting data from a \code{\link{dc_CA_vegan}} object for plotting the
-CWMs and SNCs of a single axis.}
+\title{Utility function for extracting data from a \code{\link{dc_CA_vegan}} object for plotting
+ a single axis.}
 \usage{
 getPlotdata(
   object,
@@ -30,8 +30,7 @@ If set to \code{NA}, no additional coloring or lines are displayed.}
 
 \item{newnames}{a list  with two elements:
 names for traits and for environmental variables, default \code{NULL} for
-names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.
-\emph{i.e.} \code{list(levels(traitfactor), levels(envfactor))}.}
+names derived from the result of \code{\link{scores.dccav}} with \code{tidy=TRUE}.}
 
 \item{facet}{logical. Default \code{TRUE} for CWMs and SNCs plots in separate panels.
 This parameter changes the position of the centroid names (from left to right for the environmental

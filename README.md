@@ -3,6 +3,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+This repository has been closed and continues under the new repository with
+the name douconca. The names dcca,DCCA and dcCA refer to different methods and
+packages. Th new name is hopefully unique.
  dcCA analyzes multi-trait multi-environment ecological data by
 double constrained correspondence analysis (ter Braak et al. 2018) 
 using \code{vegan} and native R code. It has a \code{formula} interface
